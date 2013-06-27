@@ -1,0 +1,41 @@
+ROUTEDESC=管理平台发起_手工入账
+[ROUTE]
+#################################################验证商户号是否存在###############################################
+10   EXEC (1) SELECT AcctNo INTO :AcctNo FROM acct_main_record WHERE AcctNo='{FML(InReqAcctNo)}'
+15   IF AND(SEQ(FML(_SQLCODE),0),SEQ(FML(_SQLNROWS),0)) THEN SET OutRespCode=S531 
+20   IF AND(SEQ(FML(_SQLCODE),0),SEQ(FML(_SQLNROWS),0)) THEN SET OutRespInf=手工入账失败-虚拟账户未找到
+25   IF AND(SEQ(FML(_SQLCODE),0),SEQ(FML(_SQLNROWS),0)) THEN GOTO 200
+##################################################################################################################
+
+################################################虚拟账户转账######################################################
+50   SET TranCode=8801                                                                     #交易码
+55   SET TranChannel=FILL(MSGHEAD(iBegin_q_id),0,4,L)                                      #交易渠道
+60   SET CustomAcctNo=FML(InReqAcctNo)                                                     #客户账号
+65   SET AcctType=0                                                                        #账号类型
+75   SET JDFlag=11                                                                         #借贷标志
+80   SET XZFlag=1                                                                          #现转标记
+85   SET TolAcctNo=                                                                        #汇总账户
+90   SET Money=FML(InReqTranAmt)                                                           #交易金额
+95   SET JYFlag=0                                                                          #校验标志
+100  SET PassWord=                                                                         #客户密码
+105  SET CustomName=                                                                       #客户名称
+110  SET CredType=                                                                         #证件类型
+115  SET CredNo=                                                                           #证件号码
+120  SET Abstract=                                                                         #业务摘要
+125  SET Note=                                                                             #备注
+
+130  CALL 33                                                                               #对虚拟账户进行充值
+
+135  IF NOT(SEQ(FML(RespCode),S230)) THEN SET OutAcctJnl=                                  #账务流水号
+140  IF NOT(SEQ(FML(RespCode),S230)) THEN SET OutAcctYe=                                   #当前余额
+141  IF NOT(SEQ(FML(RespCode),S230)) THEN SET OutRespCode=FML(RespCode)                    #返回码
+145  IF NOT(SEQ(FML(RespCode),S230)) THEN SET OutRespInf=FML(RespInfo)                     #返回信息
+
+150  IF SEQ(FML(RespCode),S230) THEN SET OutAcctJnl=TRIM(FML(Rzh))                         #账务流水号
+155  IF SEQ(FML(RespCode),S230) THEN SET OutAcctYe=TRIM(FML(AcctYe))                       #当前余额
+160  IF SEQ(FML(RespCode),S230) THEN SET OutRespCode=S500                                  #返回码
+165  IF SEQ(FML(RespCode),S230) THEN SET OutRespInf=FML(RespInfo)                          #返回信息
+##################################################################################################################
+
+200  SEND MSGHEAD(iBegin_q_id) WITH END
+

@@ -1,0 +1,10 @@
+FMTDESC=移动接出_运营商充值交易查询_请求打包
+TRANTYPE=101
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+=FILL(100204,SPACE(1),6,R)                                                    #充值交易查询交易码
+=FILL(SPACE(1),SPACE(1),32,R)                                                 #代理商账号(从配置文件中取)
+=FILL(SPACE(1),SPACE(1),32,R)                                                 #代理商密码(从加密文件中取,此处填空)
+=FILL(SAD(GETTIME(YYYYMMDD),FILL(MSGHEAD(lTranid),0,8,L)),SPACE(1),32,R)      #查询流水号
+=FILL(FML(InOriStdioJnl),SPACE(1),32,R)                                       #查询源交易流水号

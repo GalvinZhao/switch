@@ -1,0 +1,9 @@
+FMTDESC=µÁ–≈ø®√‹≤È—Ø
+TRANTYPE=1
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+MsgType=NSP(1,6)
+MsgBodyDX=NSP(7,144)
+
+

@@ -1,0 +1,20 @@
+FMTDESC=Web接入_手机充值_请求解包
+TRANTYPE=1
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+#InReqDateTime=TRIM(NSP(7,14))                #交易发起日期时间
+#InReqJnl=TRIM(NSP(21,18))                    #请求方流水号
+#InLogAcct=TRIM(NSP(39,16))                   #用户登陆账号(商户号)
+#InMchPwd=TRIM(NSP(55,6))                     #特殊码
+#InPhoneNum=TRIM(NSP(61,15))                  #充值手机号
+#InPhoneFlg=LFT(TRIM(NSP(61,15)),3)           #手机充方(业务处理用)
+#InDepositAmt=TRIM(NSP(76, 12))               #充值金额 单位分
+InNodeCode=TRIM(NSP(1,4))
+InReqDateTime=TRIM(NSP(11,14))                #交易发起日期时间
+InReqJnl=TRIM(NSP(25,18))                    #请求方流水号
+InLogAcct=TRIM(NSP(43,16))                   #用户登陆账号(商户号)
+InMchPwd=TRIM(NSP(59,16))                     #特殊码
+InPhoneNum=TRIM(NSP(75,15))                  #充值手机号
+InPhoneFlg=LFT(TRIM(NSP(75,15)),3)           #手机充方(业务处理用)
+InDepositAmt=TRIM(NSP(90, 12))               #充值金额 单位分

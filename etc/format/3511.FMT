@@ -1,0 +1,5 @@
+FMTDESC=管理平台接入_补充值_请求解包
+TRANTYPE=1
+[TDF]
+InTranCode=TRIM(NSP(1,8))                     #交易码8
+InOriStdioJnl=TRIM(NSP(9,30))                 #原充值平台流水号30

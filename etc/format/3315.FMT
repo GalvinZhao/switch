@@ -1,0 +1,6 @@
+FMTDESC=短信接出_短信通知_返回解包
+TRANTYPE=1
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+SmsPackBody=TRIM(NSP(1,512))                      #短消息整个返回报文

@@ -1,0 +1,8 @@
+FMTDESC=去山东接出
+TRANTYPE=2
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+RespCode=TRIM(SEP(0,0,0))     #返回码0为成功其它为失败
+RespInfo=IF(SEQ(SEP(0,0,0),0),TRIM(SEP(0,0,2)),TRIM(SEP(0,0,3)))      #返回信息
+UbionNum=IF(SEQ(SEP(0,0,0),0),TRIM(SEP(0,0,3)),TRIM(SEP(0,0,1)))      #缴费平台流水号

@@ -1,0 +1,78 @@
+ROUTEDESC=管理平台发起_补充值
+[ROUTE]
+####################################################补充值控制##########################################################
+#运营商渠道,交易状态,自动冲账状态,自动还卡状态,发起方对账状态,运营商对账状态,对账后续状态
+10   EXEC (1) SELECT RecvFlg,TranStat,ReAcctState,ReCardState INTO :RecvFlg,:TranStat,:ReAcctState,:ReCardState FROM d_directadd WHERE StdioJnl='{FML(InOriStdioJnl)}'
+15   EXEC (2) SELECT SenderChkState,RecvChkState,RetainFld2 INTO :SenderChkState,:RecvChkState,:RetainFld2 FROM d_directadd WHERE StdioJnl='{FML(InOriStdioJnl)}'
+20   IF AND(SEQ(FML(_SQLCODE),0),SEQ(FML(_SQLNROWS),0)) THEN SET OutRespCode=S541
+25   IF AND(SEQ(FML(_SQLCODE),0),SEQ(FML(_SQLNROWS),0)) THEN SET OutRespInf=源充值平台的流水未找到-补充值失败
+30   IF AND(SEQ(FML(_SQLCODE),0),SEQ(FML(_SQLNROWS),0)) THEN GOTO 500
+
+40   SET RecvFlg=TRIM(NFML(RecvFlg,1))
+45   SET TranStat=TRIM(NFML(TranStat,1))
+50   SET ReAcctState=TRIM(NFML(ReAcctState,1))
+55   SET ReCardState=TRIM(NFML(ReCardState,1))
+60   SET SenderChkState=TRIM(NFML(SenderChkState,1))
+65   SET RecvChkState=TRIM(NFML(RecvChkState,1))
+70   SET RetainFld2=TRIM(NFML(RetainFld2,1))
+
+#运营商渠道为联通,交易状态必须为5,对账后续状态不为01,02(已补充,已退款)
+#运营商渠道为移动,交易状态必须为5,对账后续状态不为01,02(已补充,已退款),运营商对账状态为第三方失败平台超时
+#80  IF AND(SEQ(FML(RecvFlg),0035),OR(NOT(SEQ(FML(TranStat),5)),NOT(SEQ(FML(TranStat),6)))) THEN SET OutRespCode=S542
+#85  IF AND(SEQ(FML(RecvFlg),0035),OR(NOT(SEQ(FML(TranStat),5)),NOT(SEQ(FML(TranStat),6)))) THEN SET OutRespInf=联通充值交易状态不为超时或失败-不能进行补充值
+#90  IF AND(SEQ(FML(RecvFlg),0035),OR(NOT(SEQ(FML(TranStat),5)),NOT(SEQ(FML(TranStat),6)))) THEN GOTO 500
+80   IF NOT(SEQ(FML(TranStat),5)) THEN SET OutRespCode=S542
+85   IF NOT(SEQ(FML(TranStat),5)) THEN SET OutRespInf=交易状态不为超时-不能进行补充值
+90   IF NOT(SEQ(FML(TranStat),5)) THEN GOTO 500
+
+100  IF OR(SEQ(FML(RetainFld2),01),SEQ(FML(RetainFld2),02)) THEN SET OutRespCode=S543
+105  IF OR(SEQ(FML(RetainFld2),01),SEQ(FML(RetainFld2),02)) THEN SET OutRespInf=对账后续状态为已补充或已退款-不能再进行补充值
+110  IF OR(SEQ(FML(RetainFld2),01),SEQ(FML(RetainFld2),02)) THEN GOTO 500
+
+120  IF AND(SEQ(FML(RecvFlg),0037),SEQ(FML(TranStat),6)) THEN SET OutRespCode=S544
+125  IF AND(SEQ(FML(RecvFlg),0037),SEQ(FML(TranStat),6)) THEN SET OutRespInf=移动充值失败-不能进行补充值
+130  IF AND(SEQ(FML(RecvFlg),0037),SEQ(FML(TranStat),6)) THEN GOTO 500
+
+140  IF AND(SEQ(FML(RecvFlg),0037),NOT(SEQ(FML(RecvChkState),07))) THEN SET OutRespCode=S545
+145  IF AND(SEQ(FML(RecvFlg),0037),NOT(SEQ(FML(RecvChkState),07))) THEN SET OutRespInf=移动运营商对账状态不为第三方失败平台超时-不能进行补充值
+150  IF AND(SEQ(FML(RecvFlg),0037),NOT(SEQ(FML(RecvChkState),07))) THEN GOTO 500
+#######################################################################################################################
+
+#####################################################取补充值公共信息##################################################
+#充值金额,手机号码
+160  EXEC (1) SELECT TranAmt,MobilePhone INTO :TranAmt,:MobilePhone FROM d_directadd WHERE StdioJnl='{FML(InOriStdioJnl)}'
+165  SET TranAmt=TRIM(NFML(TranAmt,1))
+170  SET MobilePhone=TRIM(NFML(MobilePhone,1))
+175  IF  SEQ(FML(RecvFlg),0037) THEN GOTO 240
+#######################################################################################################################
+
+#####################################################取联通补充值信息##################################################
+#充值卡卡号,卡密入库流水号
+190  IF SEQ(FML(RecvFlg),0035) THEN EXEC (1) SELECT CardNo,CardJnl INTO :CardNo,:CardJnl FROM d_directadd WHERE StdioJnl='{FML(InOriStdioJnl)}'
+195  IF SEQ(FML(RecvFlg),0035) THEN SET CardNo=TRIM(NFML(CardNo,1))
+200  IF SEQ(FML(RecvFlg),0035) THEN SET CardJnl=TRIM(NFML(CardJnl,1))
+205  IF SEQ(FML(RecvFlg),0035) THEN EXEC (1) SELECT CardKey INTO :CardKey FROM d_cards WHERE CardNo='{FML(CardJnl)}'
+210  IF AND(SEQ(FML(_SQLCODE),0),SEQ(FML(_SQLNROWS),0)) THEN SET OutRespCode=S546
+215  IF AND(SEQ(FML(_SQLCODE),0),SEQ(FML(_SQLNROWS),0)) THEN SET OutRespInf=卡密库中未找到原卡密信息-补充值失败
+220  IF AND(SEQ(FML(_SQLCODE),0),SEQ(FML(_SQLNROWS),0)) THEN GOTO 500
+225  SET CardKey=TRIM(NFML(CardKey,1))
+######################################################################################################################
+
+#####################################################去运营商进行补充值###############################################
+240  SET PhoneNum=FML(MobilePhone)                                                                                  #充值手机号
+245  SET DepositAmt=FML(TranAmt)                                                                                    #充值金额
+250  SET CardNumber=FML(CardNo)                                                                                     #充值卡号
+255  SET CardPIN=FML(CardKey)                                                                                       #充值卡密
+
+270  IF SEQ(FML(RecvFlg),0035) THEN CALL 35                                                                         #去联通
+275  IF SEQ(FML(RecvFlg),0037) THEN CALL 37                                                                         #去移动
+
+290  IF AND(SEQ(FML(RecvFlg),0035),SEQ(FML(RespCode),0000)) THEN SET DepositState=8                                 #交易成功
+295  IF AND(SEQ(FML(iDesQid),37),SEQ(FML(RespCode),0)) THEN SET DepositState=8                                      #交易成功
+300  IF SEQ(FML(DepositState),8) THEN EXEC (1) UPDATE d_directadd SET RetainFld2='03' WHERE StdioJnl='{FML(InOriStdioJnl)}' #更新对账后续状态为补充值失败
+305  IF SEQ(FML(DepositState),8) THEN SET OutRespCode=S500
+310  IF SEQ(FML(DepositState),8) THEN SET OutRespInf=补充值成功
+######################################################################################################################
+
+500  SEND MSGHEAD(iBegin_q_id) WITH END
+

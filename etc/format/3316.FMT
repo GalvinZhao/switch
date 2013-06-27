@@ -1,0 +1,6 @@
+FMTDESC=短信接出_短信通知_请求打包
+TRANTYPE=101
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+=TRIM(FML(InPackBody))

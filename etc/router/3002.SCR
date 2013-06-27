@@ -1,0 +1,136 @@
+ROUTEDESC=建行转账
+[ROUTE]
+##############################################记交易流水#############################################################
+1    SET TranCode=8902                                                                     #交易码
+5    SET SenderJnl=FML(InJnl)                                                              #发起方流水号
+10   SET StdioJnl=FILL(SAD(GETTIME(YYYYMMDD),FILL(MSGHEAD(lTranid),0,8,L)),SPACE(1),16,R)  #平台流水号
+15   SET RecvJnl=FML(StdioJnl)                                                             #第三方流水号
+20   SET AcctJnl=                                                                          #账务流水号
+25   SET TranDate=GETTIME(YYYYMMDD)                                                        #交易日期
+30   SET TranTime=GETTIME(HHMMSS)                                                          #交易时间
+35   SET TranStat=0                                                                        #交易状态(初始状态)
+40   SET StdioTranCode=MSGHEAD(aTrancode)                                                  #平台交易码
+45   SET SenderFlg=FILL(MSGHEAD(iBegin_q_id),0,4,L)                                        #交易发起渠道
+50   SET CusLoginAcct=FML(InLogAcct)                                                       #用户登陆账号
+
+55   EXEC (1) SELECT AccountNo,AccountName INTO :CusBankAcctNo,:CusAcctName FROM m_merchant WHERE MchntID='{FML(InLogAcct)}' #取客户银行账号和户名
+56   IF AND(SEQ(FML(_SQLCODE),0),SEQ(FML(_SQLNROWS),0))  THEN SET RespCode=S213                                    #返回码
+57   IF AND(SEQ(FML(_SQLCODE),0),SEQ(FML(_SQLNROWS),0))  THEN SET RespInfo=登陆账号对应的银行账号未找到            #返回信息
+58   IF AND(SEQ(FML(_SQLCODE),0),SEQ(FML(_SQLNROWS),0))  THEN GOTO 500                                             #返回
+
+64   SET CusBankAcctNo=TRIM(NFML(CusBankAcctNo,1))                                         #用户银行账号
+65   SET CusAcctName=TRIM(NFML(CusAcctName,1))                                             #用户银行户名
+66   IF SEQ(LEN(TRIM(FML(CusBankAcctNo))),0)  THEN SET RespCode=S213                       #返回码
+67   IF SEQ(LEN(TRIM(FML(CusBankAcctNo))),0)  THEN SET RespInfo=登陆账号对应的银行账号未找到  #返回信息
+68   IF SEQ(LEN(TRIM(FML(CusBankAcctNo))),0)  THEN GOTO 500                                   #返回
+
+
+70   SET OrderNo=                                                                          #订单号
+75   SET InOrderNo=                                                                        #内部订单号
+80   SET HarvestAcctNo=31001519300050018716                                                #转入德丰账号
+85   SET TranAmt=FML(InTranAmt)                                                            #交易金额
+90   SET TranYe=                                                                           #当前余额
+95   SET RecvRespCode=                                                                     #第三方返回码
+100  SET RecvRespInf=                                                                      #第三方返回信息
+105  SET AcctRespCode=                                                                     #账务返回码
+110  SET AcctRespInf=                                                                      #账务返回信息
+111  SET CreditNo=                                                                         #第三方凭证号
+112  SET RetainFld1=FML(InReqDateTime)                                                     #保留字段1(发起方交易日期时间)
+113  SET RetainFld2=                                                                       #保留字段2
+114  SET RetainFld3=                                                                       #保留字段3
+115  SET RetainFld4=                                                                       #保留字段4
+
+120  CALL 22                                                                               #记交易流水
+                                                                                           
+130  IF NOT(SEQ(FML(RespCode),S210)) THEN GOTO  500                                        #返回
+###################################################################################################################      
+                 
+################################################去建行进行转账#####################################################                                                                    
+140  SET REQUEST_SN=FML(StdioJnl)                                                          #请求序列号
+145  SET CUST_ID=SAD(P000703092351,CHR(35),0)                                              #客户号(德丰网银客户号P000703092351#0)
+150  SET USER_ID=WLPT04                                                                    #操作员号
+155  SET PASSWORD=123456                                                                   #密码
+160  SET TX_CODE=6W1303                                                                    #交易码
+165  SET LANGUAGE=CN                                                                       #语言
+170  SET ACC_NO1=FML(HarvestAcctNo)                                                        #转出账户
+175  SET BILL_CODE=BATPAY072990061                                                         #代发代扣编号
+180  SET ACC_NO2=FML(CusBankAcctNo)                                                        #转入账户
+185  SET OTHER_NAME=FML(CusAcctName)                                                       #对方姓名
+190  SET AMOUNT=FML(TranAmt)                                                               #金额
+195  SET USEOF_CODE=99999999                                                               #用途
+#200 SET REM1=                                                                             #备注1
+#205 SET REM2=                                                                             #备注2
+#210 SET SIGN_INFO=                                                                        #签名信息
+#215 SET SIGNCERT=                                                                         #签名CA信息
+
+
+250  CALL 41                                                                               #去建行进行转账
+
+255  SET StdioJnl=FILL(SAD(GETTIME(YYYYMMDD),FILL(MSGHEAD(lTranid),0,8,L)),SPACE(1),16,R)  #重组平台流水号
+                                                                                           
+260  SET RespCode=FML(RETURN_CODE)                                                         #返回码
+270  SET RespInfo=FML(RETURN_MSG)                                                          #返回信息
+271  SET CreditNo=FML(CREDIT_NO)                                                           #凭证号
+                                                                                           
+280  IF NOT(SEQ(FML(RespCode),000000)) THEN SET TranStat=1                                 #建行失败
+281  IF SEQ(FML(RespCode),000000) THEN SET TranStat=2                                      #建行成功
+282  IF SEQ(FML(RespCode),000000) THEN SET RespInfo=建行成功                               #建行成功
+290  EXEC (1) UPDATE d_TransferJnl SET RecvRespCode='{FML(RespCode)}',RecvRespInf='{FML(RespInfo)}',TranStat='{FML(TranStat)}' WHERE StdioJnl='{FML(StdioJnl)}'
+291  EXEC (1) UPDATE d_TransferJnl SET CreditNo='{FML(CreditNo)}' WHERE StdioJnl='{FML(StdioJnl)}'
+302  IF NOT(SEQ(FML(RespCode),000000)) THEN GOTO 500                                       #返回
+##################################################################################################################
+
+################################################虚拟账户转账######################################################
+310  SET TranCode=8801                                                                     #交易码
+315  SET TranChannel=FILL(MSGHEAD(iBegin_q_id),0,4,L)                                      #交易渠道
+320  SET CustomAcctNo=FML(InLogAcct)                                                       #客户账号
+325  SET AcctType=0                                                                        #账号类型
+330  SET JDFlag=11                                                                         #借贷标志
+335  SET XZFlag=1                                                                          #现转标记
+340  SET TolAcctNo=                                                                        #汇总账户
+345  SET Money=FML(InTranAmt)                                                              #交易金额
+350  SET JYFlag=0                                                                          #校验标志
+355  SET PassWord=                                                                         #客户密码
+360  SET CustomName=                                                                       #客户名称
+365  SET CredType=                                                                         #证件类型
+370  SET CredNo=                                                                           #证件号码
+375  SET Abstract=                                                                         #业务摘要
+380  SET Note=                                                                             #备注
+
+390  CALL 33                                                                               #对虚拟账户进行充值
+
+406  IF NOT(SEQ(FML(RespCode),S230)) THEN SET AcctJnl=                                     #账务流水号
+407  IF NOT(SEQ(FML(RespCode),S230)) THEN SET TranYe=                                      #当前余额
+408  IF NOT(SEQ(FML(RespCode),S230)) THEN SET TranStat=3                                   #账务失败
+
+420  IF SEQ(FML(RespCode),S230) THEN SET AcctJnl=TRIM(FML(Rzh))                            #账务流水号
+425  IF SEQ(FML(RespCode),S230) THEN SET TranYe=TRIM(FML(AcctYe))                          #当前余额
+430  IF SEQ(FML(RespCode),S230) THEN SET TranStat=4                                        #交易成功
+
+440  EXEC (1) UPDATE d_TransferJnl SET AcctJnl='{FML(AcctJnl)}',TranYe='{FML(TranYe)}' WHERE StdioJnl='{FML(StdioJnl)}'
+450  EXEC (1) UPDATE d_TransferJnl SET AcctRespCode='{FML(RespCode)}',AcctRespInf='{FML(RespInfo)}',TranStat='{FML(TranStat)}' WHERE StdioJnl='{FML(StdioJnl)}'
+##################################################################################################################
+
+#如果交易成功将返回码置成000000
+460  IF SEQ(FML(TranStat),4) THEN SET RespCode=000000
+
+#返回码处理
+500  SET TranChannel=FILL(MSGHEAD(iBegin_q_id),0,4,L)                                                             #交易发起渠道
+510  EXEC (1) SELECT in_respCode INTO :inRespCode FROM std_respcode WHERE stdout_respCode='{FML(RespCode)}' AND in_senderFlg='{FML(TranChannel)}'
+520  IF AND(SEQ(FML(_SQLCODE),0),NOT(SEQ(FML(_SQLNROWS),0)))  THEN SET RespCode=TRIM(NFML(inRespCode,1))          #返回码转换
+530  IF AND(SEQ(FML(_SQLCODE),0),NOT(SEQ(FML(_SQLNROWS),0)))  THEN GOTO    600                                    #设置域的返回值
+540  SET RespCode=S999                                                                                            #设置默认返回码
+550  EXEC (1) SELECT in_respCode INTO :inRespCode FROM std_respcode WHERE stdout_respCode='{FML(RespCode)}' AND in_senderFlg='{FML(TranChannel)}'
+560  SET RespCode=TRIM(NFML(inRespCode,1))                                                                        #返回码转换 
+
+600  SET OutJnl=FML(InJnl)                                                                 #请求方流水号   
+610  SET OutReJnl=FML(StdioJnl)                                                            #应答流水号     
+620  SET OutRespCode=FML(RespCode)                                                         #返回码         
+630  SET OutTranDate=FML(TranDate)                                                         #交易日期       
+640  SET OutTranTime=FML(TranTime)                                                         #交易时间      
+650  SET OutAcctYe=FML(TranYe)                                                             #交易后余额   
+
+1000 SEND MSGHEAD(iBegin_q_id) WITH END
+
+
+

@@ -1,0 +1,11 @@
+FMTDESC=电信直充:解包
+TRANTYPE=0
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+RespCode=FML(RespCode)        #响应码
+RespInfo=FML(RespInfo)        #响应信息
+CardNo=FML(CardNo)            #卡密入库流水号
+CardNumber=FML(CardNumber)    #卡序列号
+CardPIN=FML(CardPIN)          #卡密
+

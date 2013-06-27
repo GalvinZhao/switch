@@ -1,0 +1,7 @@
+FMTDESC=“∆∂Ø≥‰÷µ≤È—Ø
+TRANTYPE=1
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+MsgType=NSP(1,6)
+MsgBodyYD=NSP(7,144)

@@ -1,0 +1,14 @@
+FMTDESC=IVR接入_虚拟账户转账(建行)_请求解包
+TRANTYPE=1
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+#InReqDate=TRIM(NSP(7,8))             #交易请求日期
+#InReqTime=TRIM(NSP(15,6))            #交易请求时间
+InReqDateTime=TRIM(NSP(7,14))        #发起方交易日期时间
+InJnl=TRIM(NSP(21,18))               #流水号 IVR产生
+InLogAcct=TRIM(NSP(39,16))           #用户登陆账号 商户号
+InMchPwd=TRIM(NSP(55,16))             #密码
+InTranAmt=TRIM(NSP(71, 12))          #转账金额 单位分
+
+

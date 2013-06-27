@@ -1,0 +1,8 @@
+FMTDESC=管理平台接入_手工扣帐_请求解包
+TRANTYPE=1
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+InReqTranCode=TRIM(NSP(0,8))             #请求交易码
+InReqAcctNo=TRIM(NSP(8,30))              #虚拟账户号
+InReqTranAmt=TRIM(NSP(38,18))            #转账金额

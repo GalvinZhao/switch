@@ -1,0 +1,14 @@
+FMTDESC=IVR接入_手机充值_请求解包
+TRANTYPE=1
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+#InReqDate=TRIM(NSP(7,8))                     #交易请求日期
+#InReqTime=TRIM(NSP(15,6))                    #交易请求时间
+InReqDateTime=TRIM(NSP(7,14))                #交易发起日期时间
+InReqJnl=TRIM(NSP(21,18))                    #请求方流水号
+InLogAcct=TRIM(NSP(39,16))                   #用户登陆账号(商户号)
+InMchPwd=TRIM(NSP(55,16))                     #特殊码
+InPhoneNum=TRIM(NSP(71,15))                  #充值手机号
+InPhoneFlg=LFT(TRIM(NSP(71,15)),3)           #手机号码标识(业务处理用)
+InDepositAmt=TRIM(NSP(86, 12))               #充值金额 单位分

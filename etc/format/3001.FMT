@@ -1,0 +1,24 @@
+FMTDESC=农商行ATM接入_手机充值_请求解包
+TRANTYPE=1
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+InPackLen=TRIM(NSP(1,4))            #消息包大小
+InHeadLen=TRIM(NSP(5,4))            #包头大小
+InTranType=TRIM(NSP(9,4))           #交易类型------------
+InVersion=TRIM(NSP(13,2))           #版本号
+InEptFlg=TRIM(NSP(15,1))            #加密标志
+InEptType=TRIM(NSP(16,1))           #加密方式
+InTranType=TRIM(NSP(17,4))          #交易类别------------
+#InChannelNum=TRIM(NSP(21,15))      #渠道(商户)号-----------
+InLogAcct=TRIM(NSP(21,15))          #渠道(商户)号-----------
+InCityNum=TRIM(NSP(36,4))           #城市代码
+InReqDateTime=TRIM(NSP(40,14))      #接入端交易时间
+InReqTermJnl=TRIM(NSP(54,6))        #接入端流水号
+InReqJnl=TRIM(NSP(40,20))           #交易发起方流水号--------------
+InPhoneNum=TRIM(NSP(60,11))         #手机号码------------
+InPhoneFlg=TRIM(NSP(60,3))          #手机号码标识(业务处理用)--------------
+InDepositAmt=TRIM(NSP(71,12))       #充值金额-------------
+InRetainFld=TRIM(NSP(83,30))        #保留
+
+

@@ -1,0 +1,4 @@
+ROUTEDESC=移动充值查询
+[ROUTE]
+70   IF SEQ(FML(MsgType),000119) THEN CALL 66
+100  SEND MSGHEAD(iBegin_q_id) WITH END  #返回发起端

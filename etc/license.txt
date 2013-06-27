@@ -1,0 +1,7 @@
+[Brilliance Switch Platform 5.0.0]
+LICENSEE=µÂ·áÍøÂç
+SERIAL=20110101-5.0-1001
+ORDERLIST=swCtrl;swRouter;swFormat;swMonlog;swMonrev;swMonsaf;swDb;swFile;swBatch;swPrep;swFront;swComm;swTask;swSysmon;swSyscom;swSyscon;
+USERS=200
+DATE=20201231
+SIGNATURE=1#!111%=0?0-!!sCwrt*}wsoCtebes:Fgro`m+uwsMlwos:Mf~ec+wwsMrnfas:Dg;swsyFels:Bgtqics:Pwec;awsrG~+uwsCm|s:Twcp;kwsiS}c~s:Sgsxc+}wsiSsc~":!!1#1#"00#

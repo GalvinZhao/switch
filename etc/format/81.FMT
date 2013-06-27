@@ -1,0 +1,12 @@
+FMTDESC=测试80
+TRANTYPE=101
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+=FILL(FML(RespCode),SPACE(1),4 ,L)    #响应码  4  
+=FILL(FML(RespInfo),SPACE(1),30,L)    #响应信息30 
+=FILL(FML(Rzh),SPACE(1),10,L)         #日志号  10 
+=FILL(FML(Cph),SPACE(1),10,L)         #传票号  10 
+=FILL(FML(CustomAcctNo),SPACE(1),30,L)#客户账号30 
+=FILL(FML(AcctYe),SPACE(1),20,L)      #账户余额20 
+=FILL(FML(AvailYe),SPACE(1),20,L)     #可用余额20

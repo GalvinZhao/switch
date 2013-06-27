@@ -1,0 +1,21 @@
+FMTDESC=测试80
+TRANTYPE=1
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+TranCode    =NSP(1,6 )    #交易码	4
+TranChannel =NSP(5,4 )    #交易渠道	4
+CustomAcctNo=NSP(9,30)    #客户账号	30
+AcctType    =NSP(39,2 )   #账号类型	2
+JDFlag      =NSP(41,2 )   #借贷标志	2
+XZFlag      =NSP(43,2 )   #现转标志	2
+AcctNo      =NSP(45,30)   #汇总账户	30
+Money       =NSP(75,20)   #交易金额	20
+JYFlag      =NSP(95,2 )   #校验标志	2
+PassWord    =NSP(97,8 )   #客户密码	8
+CustomName  =NSP(127,30)  #客户名称	30
+CredType    =NSP(157,6 )  #证件类型	6
+CredNo      =NSP(163,30)  #证件号码	30
+Abstract    =NSP(193,20)  #业务摘要	20
+Note        =NSP(213,20)  #备注	20
+

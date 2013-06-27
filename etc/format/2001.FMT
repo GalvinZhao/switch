@@ -1,0 +1,42 @@
+FMTDESC=卡密下载请求报文
+TRANTYPE=1
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+TranCode=NSP(1,6)          #交易编码
+TranJnl=NSP(7,20)          #交易流水号
+So1=NSP(27,1)
+Pt=NSP(28,1)
+TerminalID=NSP(29,16)      #终端编号
+PosOp=NSP(45,16)           #操作员
+ReqTime=NSP(61,16)         #请求时间
+Fc=NSP(77,2)
+TradKey=NSP(79,20)         #交易密码
+Back1=NSP(99,52)
+So2=NSP(151,1)
+CardType=NSP(152,2)         #卡种代码
+ValueType=NSP(154,2)        #卡种面值
+CardNum=NSP(156,2)          #请求数量
+Back2=NSP(158,122)
+So3=NSP(280,1)
+
+Card1=
+Card2=
+Card3=
+Card4=
+Card5=
+Card6=
+Card7=
+Card8=
+Card9=
+Card10=
+Phd=
+Dsp=
+Rsv=
+
+CardNo=
+CardID=
+CardKey=
+CardValid=
+DeadLine=
+

@@ -1,0 +1,6 @@
+FMTDESC=管理平台接入_手工抹账_请求解包
+TRANTYPE=1
+[TDF]
+InReqTranCode=TRIM(NSP(0,8))             #请求交易码
+InOriAcctJnl=TRIM(NSP(8,30))             #原转账账务流水号
+

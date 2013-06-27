@@ -1,0 +1,37 @@
+FMTDESC=联通接出_手机充值_请求打包
+TRANTYPE=101
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+=FILL(12,SPACE(1),2,R)                        #版本号head1
+=FILL(232,SPACE(1),5,R)                       #数据包大小head2
+=FILL(SAD(GETTIME(YYYYMMDD),FILL(MSGHEAD(lTranid),0,8,L)),SPACE(1),20,L)  #消息平台流水head3
+=FILL(1,SPACE(1),1,R)                         #响应代码,返回有效head4
+=FILL(SPACE(1),SPACE(1),12,R)                 #服务类型head5
+=FILL(SPACE(1),SPACE(1),20,R)                 #业务类型head6
+=FILL(SPACE(1),SPACE(1),1,R)                  #业务类型head7
+=FILL(SPACE(1),SPACE(1),6,R)                  #营业网点head8
+=FILL(SPACE(1),SPACE(1),8,R)                  #营业员head9
+=FILL(3,SPACE(1),5,L)                         #包编号head10
+=FILL(1,SPACE(1),1,R)                         #最后一位标志head11
+=FILL(00500,SPACE(1),5,R)                     #错误编码head12
+
+=FILL(SAD(FILL(1100,SPACE(1),4,L), CHR(9)),SPACE(1),5,L)                              #交易类别body1
+=FILL(SAD(FILL(GETTIME(YYYYMMDDHHMMSS),SPACE(1),14,L), CHR(9)),SPACE(1),15,L)         #交易发起时间body2
+=FILL(SAD(FILL(9110,SPACE(1),4,L), CHR(9)),SPACE(1),5,L)                              #交易来源body3
+=FILL(SAD(GETTIME(YYYYMMDD),FILL(MSGHEAD(lTranid),0,8,L)),SPACE(1),20,L)              #交易发起时间body4
+=FILL(CHR(9),SPACE(1),1,L)
+=FILL(SAD(FILL(FML(PhoneNum),SPACE(1),19,L), CHR(9)),SPACE(1),20,L)                   #充值手机body5
+=FILL(SAD(FILL(SPACE(1),SPACE(1),19,L), CHR(9)),SPACE(1),20,L)                        #充值设备密码body6
+=FILL(SAD(FILL(09,SPACE(1),2,L), CHR(9)),SPACE(1),3,L)                                #充值卡类型body7
+=FILL(SAD(FILL(FML(CardNumber),SPACE(1),19,L), CHR(9)),SPACE(1),20,L)                 #充值卡号body8
+=FILL(SAD(FILL(FML(CardPIN),SPACE(1),19,L), CHR(9)),SPACE(1),20,L)                    #充值卡密码body9
+=FILL(SAD(FILL(TRIM(FML(DepositAmt)),0,16,L), CHR(26)),SPACE(1),17,L)                 #充值金额body10
+
+
+
+
+
+
+
+

@@ -1,0 +1,30 @@
+FMTDESC=电信接出_手机充值_返回解包
+TRANTYPE=1
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+MsgLen=NSP(1,4)              #消息长度head1
+EptNum=NSP(5,3)              #加密算法编号head2
+MsgCode=NSP(8,4)             #消息代码head3
+SendCode=NSP(12,4)           #发端代码head4
+RecvCode=NSP(16,4)           #收端代码head5
+MsgFlow=NSP(20,19)           #消息流水号head6
+MsgTime=NSP(39,14)           #消息产生时间head7
+InnerType=NSP(53,1)          #接入类型head8
+RetainFld1=NSP(54,14)        #保留字段head9
+RetainFld2=NSP(68,8)         #保留字段head10
+
+VouchID=NSP(76,28)           #被充值账号
+VouchType=NSP(104,2)         #被充值产品类型
+ConnType=NSP(106,2)          #接入类型
+CurFee=NSP(108,10)           #充值后账号余额
+VouchTime=NSP(118,14)        #充值日期时间
+CardNumber=NSP(132,22)       #充值卡卡号
+CardType=NSP(154,2)          #充值卡类别
+SeriNo=NSP(156,14)           #流水号
+BeginDate=NSP(170,8)         #被充值账号有效期起始日期
+EndDate=NSP(178,8)           #被充值账号有效期终止日期
+RespCode=NSP(186,4)          #响应码
+RespInfo=
+
+

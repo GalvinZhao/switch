@@ -1,0 +1,9 @@
+FMTDESC=电信直充:打包
+TRANTYPE=0
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+TranCode=FML(TranCode)    
+iInnerType=FML(iInnerType)    #运营商标志
+TranAmt=FML(TranAmt)          #充值金额
+

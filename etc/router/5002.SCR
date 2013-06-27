@@ -1,0 +1,168 @@
+ROUTEDESC=手机充值山东接出
+[ROUTE]
+
+61 SET ChnlNo=TRIM(NFML(ChnlNo,1))
+62 SET iDesQid=TRIM(NFML(SenderLoc,1))
+############第三方流水号处理#############
+#联通，移动，欧飞
+65   IF  OR(SEQ(FML(iDesQid),35),SEQ(FML(iDesQid),37),SEQ(FML(iDesQid),72)) THEN SET RecvMsgJnl=FML(StdioJnl)      #第三方消息流水号(原系统流水号)
+#移动
+70   IF  SEQ(FML(iDesQid),37) THEN SET RecvJnl=FML(StdioJnl)                                                       #第三方交易流水号
+#电信
+75   IF  SEQ(FML(iDesQid),39) THEN SET RecvMsgJnl=FILL(SAD(GETTIME(YYYYMMDD),000,FILL(MSGHEAD(lTranid),0,8,L)),SPACE(1),19,R) #第三方消息流水号
+80   IF  SEQ(FML(iDesQid),39) THEN SET RecvJnl=FILL(SAD(RIG(GETTIME(YYYYMMDD),6),FILL(MSGHEAD(lTranid),0,8,L)),SPACE(1),14,R) #第三方交易流水号
+#########################################
+90   SET TranDate=GETTIME(YYYYMMDD)                                                                                #交易日期
+95   SET TranTime=GETTIME(HHMMSS)                                                                                  #交易时间
+105  SET StdioTranCode=MSGHEAD(aTrancode)                                                                          #平台交易码
+#110  SET SenderFlg=FILL(MSGHEAD(iBegin_q_id),0,4,L)                                                                #交易发起渠道
+110  SET SenderFlg=FILL(FML(Begin_id),0,4,L)                                                                #交易发起渠道
+115  SET CusLoginAcct=FML(InLogAcct)                                                                               #用户登陆账号(商户号)
+120  SET TranAmt=FML(InDepositAmt)                                                                                 #交易金额
+160  SET MobilePhone=FML(InPhoneNum)                                                                               #手机号码
+175  SET RecvFlg=FILL(FML(iDesQid),0,4,L)                                                                          #运营商渠道
+176  SET SenderTerm=FML(InBegTerm)                                                                                 #发起终端
+177  SET SenderTranDateTime=FML(InReqDateTime)                                                                     #交易发起日期时间
+                                                                                                                   
+180  CALL 22                                                                                                       #记充值流水
+185  IF NOT(SEQ(FML(RespCode),S210)) THEN GOTO  780                                                                #返回(记流水失败)
+####################################################################################################################
+
+#######################################################扣虚拟账户操作###############################################
+#ATM发起、南京POS发起、电信信付通发起不扣虚拟账户
+250  SET ACCTFLG=TRUE
+255  SET TranCode=8804                                                                                             #交易码
+#260  SET TranChannel=FILL(MSGHEAD(iBegin_q_id),0,4,L)                                                              #交易渠道
+260  SET TranChannel=FILL(FML(Begin_id),0,4,L)                                                              #交易渠道
+265  SET CustomAcctNo=FML(InLogAcct)                                                                               #客户账号
+275  SET JDFlag=00                                                                                                 #借贷标志
+290  SET Money=FML(PayPrice)                                                                                       #交易金额
+
+330  CALL 33                                                                                                       #对虚拟账户进行扣款
+
+345  IF NOT(SEQ(FML(RespCode),S230)) THEN SET TranStat=1                                                           #默认为账务失败
+350  IF SEQ(FML(RespCode),S230) THEN SET AcctJnl=TRIM(FML(Rzh))                                                    #账务流水号
+355  IF SEQ(FML(RespCode),S230) THEN SET TranYe=TRIM(FML(AcctYe))                                                  #当前余额
+360  IF SEQ(FML(RespCode),S230) THEN SET TranStat=2                                                                #账务成功
+
+#370  EXEC (2) UPDATE d_directadd SET AcctJnl='{FML(AcctJnl)}',TranYe='{FML(TranYe)}',AcctRespCode='{FML(RespCode)}',&
+#AcctRespInf='{FML(RespInfo)}',TranStat='{FML(TranStat)}' WHERE StdioJnl='{FML(StdioJnl)}'
+370  EXEC (2) UPDATE d_directadd SET AcctJnl='{FML(AcctJnl)}',TranYe='{FML(TranYe)}'WHERE StdioJnl='{FML(StdioJnl)}'
+375  EXEC (3) UPDATE d_directadd SET AcctRespCode='{FML(RespCode)}',AcctRespInf='{FML(RespInfo)}',TranStat='{FML(TranStat)}' WHERE StdioJnl='{FML(StdioJnl)}'
+385  IF NOT(SEQ(FML(RespCode),S230)) THEN GOTO 780                                                                 #返回(虚拟账户操作失败)
+####################################################################################################################
+
+######################################################取卡密操作####################################################
+#移动不取卡密
+450  IF OR(SEQ(FML(iDesQid),37),SEQ(FML(iDesQid),72)) THEN GOTO 600
+
+460  SET TranCode=8911                                                                                             #交易码
+#470  SET RecvFlg=FILL(FML(iDesQid),0,4,L)                                                                          #运营标志
+#480  SET TranAmt=FML(InDepositAmt)                                                                                 #交易金额
+                                                                                                                   
+500  CALL 49                                                                                                       #取卡密
+
+510  IF NOT(SEQ(FML(RespCode),S220)) THEN SET TranStat=3                                                           #取卡密失败
+520  IF SEQ(FML(RespCode),S220) THEN SET TranStat=4                                                                #取卡密成功
+521  IF SEQ(FML(RespCode),S220) THEN SET CardNo=FML(CardNo)                                                        #卡号
+522  IF SEQ(FML(RespCode),S220) THEN SET CardJnl=FML(CardJnl)                                                      #卡密流水号
+
+#529  EXEC (4) UPDATE d_directadd SET CardNo='{FML(CardNo)}',CardJnl='{FML(CardJnl)}'CardRespCode='{FML(RespCode)}',&
+#CardRespInf='{FML(RespInfo)}',TranStat='{FML(TranStat)}' WHERE StdioJnl='{FML(StdioJnl)}'
+529  EXEC (4) UPDATE d_directadd SET CardNo='{FML(CardNo)}',CardJnl='{FML(CardJnl)}'CardRespCode='{FML(RespCode)}' WHERE StdioJnl='{FML(StdioJnl)}'
+530  EXEC (5) UPDATE d_directadd SET CardRespInf='{FML(RespInfo)}',TranStat='{FML(TranStat)}' WHERE StdioJnl='{FML(StdioJnl)}'
+540  IF NOT(SEQ(FML(RespCode),S220)) THEN GOTO 780                                                                 #返回码
+###################################################################################################################
+
+###################################################运营商充值处理##################################################
+600  SET TranStat=5                                                                                                #运营商初始状态
+610  EXEC (6) UPDATE d_directadd SET TranStat='{FML(TranStat)}' WHERE StdioJnl='{FML(StdioJnl)}'
+
+620  SET PhoneNum=FML(InPhoneNum)                                                                                  #充值手机号
+630  SET DepositAmt=FML(InDepositAmt)                                                                              #充值金额
+640  SET CardNumber=FML(CardNo)                                                                                    #充值卡号
+650  SET CardPIN=FML(CardPin)                                                                                      #充值卡密
+
+##add by pl for test####
+#670  GOTO 1300
+##add by pl for test####
+
+700  CALL FML(iDesQid)                                                                                             #去运营商
+
+710  EXEC (7) UPDATE d_directadd SET RecvRespCode='{FML(RespCode)}',RecvRespInf='{FML(RespInfo)}' WHERE StdioJnl='{FML(StdioJnl)}' #第三方返回码返回信息
+
+#更新联通第三方交易流水号
+711  IF  OR(SEQ(FML(iDesQid),35),SEQ(FML(iDesQid),72)) THEN SET RecvJnl=FML(UbionNum)                               #第三方交易流水号
+
+#更新交易状态
+#联通和电信成功为0000,移动为0
+715  SET TranStat=6                                                                                                #默认为交易失败
+720  IF AND(OR(SEQ(FML(iDesQid),35),SEQ(FML(iDesQid),39)),SEQ(FML(RespCode),0000)) THEN SET TranStat=8             #交易成功
+730  IF AND(SEQ(FML(iDesQid),37),SEQ(FML(RespCode),0)) THEN SET TranStat=8                                         #交易成功
+#730  IF AND(SEQ(FML(iDesQid),72),SEQ(FML(RespCode),1)) THEN SET TranStat=8                                         #交易成功
+735  IF AND(SEQ(FML(iDesQid),72),SEQ(FML(RespCode),0)) THEN SET TranStat=8                                         #交易成功
+740  EXEC (8) UPDATE d_directadd SET TranStat='{FML(TranStat)}',RecvJnl='{FML(RecvJnl)}' WHERE StdioJnl='{FML(StdioJnl)}'
+
+#返回码处理
+#780  SET TranChannel=FILL(MSGHEAD(iBegin_q_id),0,4,L)                                                              #交易发起渠道
+780  SET TranChannel=FILL(FML(Begin_id),0,4,L)                                                              #交易渠道
+790  EXEC (9) SELECT in_respCode INTO :inRespCode FROM std_respcode WHERE stdout_respCode='{FML(RespCode)}' AND in_senderFlg='{FML(TranChannel)}'
+800  IF AND(SEQ(FML(_SQLCODE),0),NOT(SEQ(FML(_SQLNROWS),0)))  THEN SET RespCode=TRIM(NFML(inRespCode,1))           #返回码转换
+801  IF AND(SEQ(FML(_SQLCODE),0),NOT(SEQ(FML(_SQLNROWS),0)))  THEN GOTO    900                                     #设置域的返回值
+802  SET RespCode=S999                                                                                             #设置默认返回码
+810  EXEC (10) SELECT in_respCode INTO :inRespCode FROM std_respcode WHERE stdout_respCode='{FML(RespCode)}' AND in_senderFlg='{FML(TranChannel)}'
+820  SET RespCode=TRIM(NFML(inRespCode,1))                                                                         #返回码转换
+
+##################################################################################################################
+
+###########################################返回发起端处理#########################################################
+900  SET OutReqJnl=FML(InReqJnl)                                                                                   #请求方流水号
+910  SET OutStdJnl=FILL(SAD(GETTIME(YYYYMMDD),FILL(MSGHEAD(lTranid),0,8,L)),SPACE(1),16,R)                         #应答流水号
+920  SET OutRespCode=FML(RespCode)                                                                                 #返回码
+930  SET OutTranDate=GETTIME(YYYYMMDD)                                                                             #交易日期
+940  SET OutTranTime=GETTIME(HHMMSS)                                                                               #交易时间
+##################################################################################################################
+
+950  EXEC (1) SELECT TranYe INTO :AfterTranYe FROM d_directadd WHERE SenderJnl='{FML(OutReqJnl)}' AND SenderFlg='{FML(SenderFlg)}'
+960  SET AfterTranYe=TRIM(NFML(AfterTranYe,1))
+
+############################################根据交易失败状态作后续处理###############################################
+#如果交易状态为初始状态、账务失败、运营商超时、成功则不做后续处理
+1000 IF OR(SEQ(FML(TranStat),0),SEQ(FML(TranStat),1),SEQ(FML(TranStat),5),SEQ(FML(TranStat),8)) THEN GOTO 1300
+#如果取卡密失败不做还卡处理
+1006 IF SEQ(FML(TranStat),3) THEN GOTO 1200
+
+#######################取出原数据(账务流水号、卡密流水号、运营商)####################
+1016  EXEC (1) SELECT AcctJnl,CardJnl,RecvFlg INTO :AcctJnl,:CardJnl,:RecvFlg FROM d_directadd WHERE StdioJnl='{FML(OutStdJnl)}'
+1017  SET AcctJnl=TRIM(NFML(AcctJnl,1))
+1018  SET CardJnl=TRIM(NFML(CardJnl,1))
+1019  SET RecvFlg=TRIM(NFML(RecvFlg,1))
+#####################################################################################
+
+#######################自动还卡######################
+#如果是移动不做还卡处理
+1020 IF OR(SEQ(FML(RecvFlg),0037),SEQ(FML(RecvFlg),0072)) THEN GOTO 1200
+
+1050 EXEC (2) UPDATE d_cards SET IssueTag='2',IssueTime='{GETTIME(YYYY-MM-DD HH:MM:SS)}' WHERE CardNo='{FML(CardJnl)}' #还原卡密为卡异常状态
+1055 SET ReCardState=0                                                                                             #默认为还卡失败
+1060 IF SEQ(FML(_SQLCODE),0) THEN SET ReCardState=1                                                                #还卡状态为成功
+1070 EXEC (3) UPDATE d_directadd SET ReCardState='{FML(ReCardState)}' WHERE StdioJnl='{FML(OutStdJnl)}'            #更新流水
+#####################################################
+
+#######################自动冲账######################
+#如果是ATM发起、南京POS发起、电信信付通发起不做自动冲账处理
+1200 SET REACCTFLG=TRUE
+
+1220 SET TranCode=8802                                                                                             #交易码
+1230 SET Rzh=FML(AcctJnl)                                                                                          #原账务流水号
+
+1240 CALL 33                                                                                                       #对虚拟账户进行扣款
+
+1250 SET ReAcctState=0                                                                                             #默认为冲账失败
+1260 IF SEQ(FML(RespCode),S230) THEN SET ReAcctState=1                                                             #冲账状态为成功
+1270 EXEC (4) UPDATE d_directadd SET RushYe='{FML(ReAcctYe)}',ReAcctState='{FML(ReAcctState)}' WHERE StdioJnl='{FML(OutStdJnl)}'  #更新流水
+#####################################################
+
+####add by pl #######
+1300 SEND MSGHEAD(iBegin_q_id)     #返回发起端
+

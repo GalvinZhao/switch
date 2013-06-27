@@ -1,0 +1,17 @@
+FMTDESC=外部接入_网络测试_请求解包
+TRANTYPE=1
+[TDF]
+InNodeTranType=TRIM(NSP(1,10))               #节点号交易类型
+InStartFlg=TRIM(NSP(11,4))                    #开始标识符4
+#InPackLen=TRIM(NSP(15,8))                    #包长度8
+InVersion=TRIM(NSP(23,4))                    #请求版本4
+InLogAcct=TRIM(NSP(27,20))                   #代理代码(商户号)20
+InBegTerm=TRIM(NSP(47,20))                   #发起终端代码20
+#InBegTermPwd=TRIM(NSP(67,20))               #发起终端密码20
+InOpeTerm=TRIM(NSP(87,20))                   #执行终端代码20
+#InOpeTermPwd=TRIM(NSP(107,20))               #执行终端密码20
+#InTimeOut=TRIM(NSP(127,8))                  #超时时间8
+InReqDate=TRIM(NSP(135,8))                   #请求日期8
+InReqTime=TRIM(NSP(143,6))                   #请求时间6
+InReqJnl=TRIM(NSP(149,20))                   #请求流水号20
+InTranCode=TRIM(NSP(169,8))                  #请求交易码8

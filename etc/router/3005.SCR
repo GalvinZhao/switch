@@ -1,0 +1,3 @@
+ROUTEDESC=直充网络测试
+[ROUTE]
+10  SEND MSGHEAD(iBegin_q_id) WITH END  #返回发起端

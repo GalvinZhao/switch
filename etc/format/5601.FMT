@@ -1,0 +1,7 @@
+FMTDESC=ÁªÍ¨¿¨ÃÜ²éÑ¯
+TRANTYPE=1
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+MsgType=NSP(1,6)
+MsgBodyLT=NSP(7,136)

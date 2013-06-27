@@ -1,0 +1,20 @@
+ROUTEDESC=管理平台发起_手工抹账
+[ROUTE]
+####################################################手工抹账######################################################
+10   SET TranCode=8802                                                                                             #交易码
+15   SET Rzh=FML(InOriAcctJnl)                                                                                     #原账务流水号
+
+20   CALL 33                                                                                                       #对虚拟账户进行扣款
+
+40   IF NOT(SEQ(FML(RespCode),S230)) THEN SET OutAcctYe=                                                           #当前余额
+45   IF NOT(SEQ(FML(RespCode),S230)) THEN SET OutRespCode=FML(RespCode)                                            #返回码
+50   IF NOT(SEQ(FML(RespCode),S230)) THEN SET OutRespInf=FML(RespInfo)                                             #返回信息
+
+60   IF SEQ(FML(RespCode),S230) THEN SET OutAcctYe=TRIM(FML(ReAcctYe))                                             #当前余额
+65   IF SEQ(FML(RespCode),S230) THEN SET OutRespCode=S500                                                          #返回码
+70   IF SEQ(FML(RespCode),S230) THEN SET OutRespInf=FML(RespInfo)                                                  #返回信息
+##################################################################################################################
+
+100  SEND MSGHEAD(iBegin_q_id) WITH END
+
+

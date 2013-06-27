@@ -1,0 +1,99 @@
+ROUTEDESC=管理平台发起_充值交易查询
+[ROUTE]
+#取运营商渠道
+10   EXEC (1) SELECT RecvFlg INTO :RecvFlg FROM d_directadd WHERE StdioJnl='{FML(InOriStdioJnl)}'
+11   IF AND(SEQ(FML(_SQLCODE),0),SEQ(FML(_SQLNROWS),0)) THEN GOTO 190
+12   SET RecvFlg=TRIM(NFML(RecvFlg,1))
+
+
+###################################取联通交易查询相关信息#############################################
+#取充值手机号
+20   IF  SEQ(FML(RecvFlg),0035) THEN EXEC (1) SELECT MobilePhone INTO :MobilePhone FROM d_directadd WHERE StdioJnl='{FML(InOriStdioJnl)}'
+#取充值金额
+21   IF  SEQ(FML(RecvFlg),0035) THEN EXEC (2) SELECT TranAmt INTO :TranAmt FROM d_directadd WHERE StdioJnl='{FML(InOriStdioJnl)}'
+#取充值卡号
+22   IF  SEQ(FML(RecvFlg),0035) THEN EXEC (3) SELECT CardNo INTO :CardNo FROM d_directadd WHERE StdioJnl='{FML(InOriStdioJnl)}'
+#取卡密入库流水号
+23   IF  SEQ(FML(RecvFlg),0035) THEN EXEC (4) SELECT CardJnl INTO :CardJnl FROM d_directadd WHERE StdioJnl='{FML(InOriStdioJnl)}'
+24   IF  SEQ(FML(RecvFlg),0035) THEN SET  MobilePhone=TRIM(NFML(MobilePhone,1))
+25   IF  SEQ(FML(RecvFlg),0035) THEN SET  TranAmt=TRIM(NFML(TranAmt,1))
+26   IF  SEQ(FML(RecvFlg),0035) THEN SET  CardNo=TRIM(NFML(CardNo,1))
+27   IF  SEQ(FML(RecvFlg),0035) THEN SET  CardJnl=TRIM(NFML(CardJnl,1))
+#取卡密
+50   IF  SEQ(FML(RecvFlg),0035) THEN EXEC (5) SELECT CardKey INTO :CardKey FROM d_cards WHERE CardNo='{FML(CardJnl)}'
+51   IF  SEQ(FML(RecvFlg),0035) THEN SET  CardKey=TRIM(NFML(CardKey,1))
+#############################################################################################################
+
+###########################################去运营商进行查询##################################################
+#去联通查询交易时的卡密
+60   IF  SEQ(FML(RecvFlg),0035) THEN CALL 35
+#去移动查询交易流水
+70   IF  SEQ(FML(RecvFlg),0037) THEN CALL 37
+#############################################################################################################
+
+#取运营商渠道
+75   EXEC (1) SELECT RecvFlg INTO :RecvFlg FROM d_directadd WHERE StdioJnl='{FML(InOriStdioJnl)}'
+76   SET RecvFlg=TRIM(NFML(RecvFlg,1))
+
+##############################################联通返回#######################################################
+#0000:成功
+80   IF  AND(SEQ(FML(RecvFlg),0035),SEQ(FML(RespCode),0000)) THEN SET OutRespCode=S501
+81   IF  AND(SEQ(FML(RecvFlg),0035),SEQ(FML(RespCode),0000)) THEN SET OutRespInf=联通返回卡未被使用，原充值交易失败
+82   IF  AND(SEQ(FML(RecvFlg),0035),SEQ(FML(RespCode),0000)) THEN GOTO 200
+#2307:卡不存在(本地的)
+#90   IF  AND(SEQ(FML(RecvFlg),0035),SEQ(FML(RespCode),2307)) THEN SET OutRespCode=S502
+#91   IF  AND(SEQ(FML(RecvFlg),0035),SEQ(FML(RespCode),2307)) THEN SET OutRespInf=联通返回卡不存在(本地的)，原充值交易失败
+#92   IF  AND(SEQ(FML(RecvFlg),0035),SEQ(FML(RespCode),2307)) THEN GOTO 200
+#1117:卡不存在(异地的)
+#100  IF  AND(SEQ(FML(RecvFlg),0035),SEQ(FML(RespCode),1117)) THEN SET OutRespCode=S503
+#101  IF  AND(SEQ(FML(RecvFlg),0035),SEQ(FML(RespCode),1117)) THEN SET OutRespInf=联通返回卡不存在(异地的)，原充值交易失败
+#102  IF  AND(SEQ(FML(RecvFlg),0035),SEQ(FML(RespCode),1117)) THEN GOTO 200
+#1101:卡密码错
+#110  IF  AND(SEQ(FML(RecvFlg),0035),SEQ(FML(RespCode),1101)) THEN SET OutRespCode=S504
+#111  IF  AND(SEQ(FML(RecvFlg),0035),SEQ(FML(RespCode),1101)) THEN SET OutRespInf=联通返回卡密码错，原充值交易失败
+#112  IF  AND(SEQ(FML(RecvFlg),0035),SEQ(FML(RespCode),1101)) THEN GOTO 200
+#1104:卡过期
+#120  IF  AND(SEQ(FML(RecvFlg),0035),SEQ(FML(RespCode),1104)) THEN SET OutRespCode=S505
+#121  IF  AND(SEQ(FML(RecvFlg),0035),SEQ(FML(RespCode),1104)) THEN SET OutRespInf=联通返回卡过期，原充值交易失败
+#122  IF  AND(SEQ(FML(RecvFlg),0035),SEQ(FML(RespCode),1104)) THEN GOTO 200
+#2300:系统错误
+#130  IF  AND(SEQ(FML(RecvFlg),0035),SEQ(FML(RespCode),2300)) THEN SET OutRespCode=S506
+#131  IF  AND(SEQ(FML(RecvFlg),0035),SEQ(FML(RespCode),2300)) THEN SET OutRespInf=联通返回系统错误，原充值交易状态不确定
+#134  IF  AND(SEQ(FML(RecvFlg),0035),SEQ(FML(RespCode),2300)) THEN GOTO 200
+#2302:手机号码错误
+130  IF  AND(SEQ(FML(RecvFlg),0035),SEQ(FML(RespCode),2302)) THEN SET OutRespCode=S507
+131  IF  AND(SEQ(FML(RecvFlg),0035),SEQ(FML(RespCode),2302)) THEN SET OutRespInf=联通返回手机号码错误，原充值交易失败
+134  IF  AND(SEQ(FML(RecvFlg),0035),SEQ(FML(RespCode),2302)) THEN GOTO 200
+
+#1100:卡状态错,不是可以用来充值的状态(可能是已被使用，也可能是未被激活等),认定为卡已被使用,交易成功
+#140  IF  AND(SEQ(FML(RecvFlg),0035),SEQ(FML(RespCode),1100)) THEN SET OutRespCode=S500
+#141  IF  AND(SEQ(FML(RecvFlg),0035),SEQ(FML(RespCode),1100)) THEN SET OutRespInf=联通返回卡可能已被使用，原充值交易成功
+#142  IF  AND(SEQ(FML(RecvFlg),0035),SEQ(FML(RespCode),1100)) THEN GOTO 200
+#1100:卡状态错,不是可以用来充值的状态(可能是已被使用，也可能是未被激活等),认定为卡已被使用,交易成功
+140  IF  AND(SEQ(FML(RecvFlg),0035),SEQ(FML(RespCode),1105)) THEN SET OutRespCode=S500
+141  IF  AND(SEQ(FML(RecvFlg),0035),SEQ(FML(RespCode),1105)) THEN SET OutRespInf=联通返回卡可能已被使用，原充值交易可能成功
+142  IF  AND(SEQ(FML(RecvFlg),0035),SEQ(FML(RespCode),1105)) THEN GOTO 200
+#############################################################################################################
+
+#############################################移动返回########################################################
+#充值失败
+160  IF  AND(SEQ(FML(RecvFlg),0037),SEQ(FML(RespCode),-1)) THEN SET OutRespCode=S511
+161  IF  AND(SEQ(FML(RecvFlg),0037),SEQ(FML(RespCode),-1)) THEN SET OutRespInf=移动返回原充值交易失败
+162  IF  AND(SEQ(FML(RecvFlg),0037),SEQ(FML(RespCode),-1)) THEN GOTO 200
+#充值成功
+170  IF  AND(SEQ(FML(RecvFlg),0037),SEQ(FML(RespCode),1)) THEN SET OutRespCode=S500
+171  IF  AND(SEQ(FML(RecvFlg),0037),SEQ(FML(RespCode),1)) THEN SET OutRespInf=移动返回原充值交易成功
+172  IF  AND(SEQ(FML(RecvFlg),0037),SEQ(FML(RespCode),1)) THEN GOTO 200
+############################################################################################################
+
+#其它错误
+180  SET OutRespCode=S521
+181  SET OutRespInf=移动或联通返回其它错误，原充值交易状态不确定
+182  GOTO 200
+
+190  SET OutRespCode=S522
+191  SET OutRespInf=原充值交易流水未找到，原充值交易状态不确定
+
+200  SEND MSGHEAD(iBegin_q_id) WITH END  #返回发起端
+
+

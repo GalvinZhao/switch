@@ -1,0 +1,17 @@
+FMTDESC=HTTP·µ»Ø
+TRANTYPE=102
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+=SAD(msgtype,=)
+=SAD(FML(InNodeCode),&)
+=SAD(reqjnl,=)
+=SAD(FML(OutReqJnl),&)
+=SAD(stdjnl,=)
+=SAD(FML(OutStdJnl),&)
+=SAD(respcode,=)
+=SAD(FML(OutRespCode),&)
+=SAD(tranye,=)
+=SAD(FML(TranYe),&)
+=SAD(datetime,=)
+=SAD(FML(OutTranDate),FML(OutTranTime))

@@ -1,0 +1,27 @@
+FMTDESC=联通接出_运营商充值交易查询_返回解包
+TRANTYPE=1
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+VerNum=NSP(1,2)              #版本号head1
+DataLen=NSP(3,5)             #数据包长度head2
+SerNum=NSP(8,20)             #流水号head3
+RevTag=NSP(28,1)             #标志位head4
+ServType=NSP(29,12)          #服务类型head5
+BusNum=NSP(41,20)            #业务号码head6
+BusType=NSP(61,1)            #业务号码类型head7
+BusTer=NSP(62,6)             #营业点head8
+BusUsr=NSP(68,8)             #营业员head9
+PackNum=NSP(76,5)            #包编号head10
+LastTag=NSP(81,1)            #最后一包标志head11
+ErrCode=NSP(82,5)            #错误码head12
+
+TranType=NSP(87,4)           #交易类别body1
+TranTime=NSP(92,14)          #交易时间body2
+TranNum=NSP(107,20)          #系统流水号body3
+RespCode=NSP(128,4)          #应答码body4
+RespInfo=NSP(133,30)         #应答描述body5
+UbionNum=NSP(164,20)         #缴费平台流水号body6
+Amount=NSP(185,16)           #交易金额body7
+LeftAmount=NSP(202,16)       #剩余金额body8
+Effective=NSP(219,14)        #有效期body9

@@ -1,0 +1,21 @@
+FMTDESC=双机POS卡密下载请求
+TRANTYPE=3
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+FMTDESC=双机POS卡密下载-请求
+TRANTYPE=3
+MAC_CREATE=
+MAC_CHECK=
+TDF=
+& TMP_SYSCODE=3201
+msgtype=ISO(1)                      # 应答msgtype
+PCODE=ISO(3)                        # 交易类型码
+SEQNO=ISO(11)                       # 外围流水号
+LOCALTIME=ISO(12)                   # 本地时间
+LOCALDATE=ISO(13)                   # 本地日期
+CARDCODE=ISO(25)                    # 卡代码
+AMOUNTCODE=ISO(26)                  # 金额代码
+TERMID=ISO(41)                      # 终端标识号
+CARDNUM=ISO(49)                     # 卡数量
+MAC=ISO(128)

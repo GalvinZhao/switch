@@ -1,0 +1,13 @@
+ROUTEDESC=直充交易查询
+[ROUTE]
+10   EXEC (1) SELECT TranDate,TranTime,TranStat INTO :TranDate,:TranTime,:TranStat FROM d_directadd WHERE SenderJnl='{FML(InOriReqJnl)}'
+15   IF AND(SEQ(FML(_SQLCODE),0),SEQ(FML(_SQLNROWS),0))  THEN SET outTranStat=8                                      #如果无流状态为操作失败
+20   IF AND(SEQ(FML(_SQLCODE),0),SEQ(FML(_SQLNROWS),0))  THEN SET outTranTime=                                       #交易时间为空
+25   IF AND(SEQ(FML(_SQLCODE),0),SEQ(FML(_SQLNROWS),0))  THEN GOTO 100                                               #返回
+30   SET TranStat=TRIM(NFML(TranStat,1))
+35   SET outTranDate=TRIM(NFML(TranDate,1))
+40   SET outTranTime=TRIM(NFML(TranTime,1))
+45   IF  SEQ(FML(TranStat),8) THEN SET outTranStat=7  #交易成功
+50   IF  SEQ(FML(TranStat),5) THEN SET outTranStat=1  #交易处理中
+55   IF  AND(NOT(SEQ(FML(TranStat),8)),NOT(SEQ(FML(TranStat),5))) THEN SET outTranStat=8  #交易失败
+100  SEND MSGHEAD(iBegin_q_id) WITH END  #返回发起端

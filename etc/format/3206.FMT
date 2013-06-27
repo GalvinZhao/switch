@@ -1,0 +1,12 @@
+FMTDESC=Web接入_虚拟账户转账(支付宝)_返回打包
+TRANTYPE=101
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+=FILL(FML(InNodeCode),SPACE(1),4,L)
+=FILL(321008,0,6,L)                           #交易码
+=FILL(TRIM(FML(OutJnl)),SPACE(1),18,L)              #请求方流水号
+=FILL(TRIM(FML(OutReJnl)),SPACE(1),18,L)            #应答流水号
+=FILL(TRIM(FML(OutRespCode)),SPACE(1),4,L)          #返回码
+=FILL(TRIM(FML(OutTranDate)),SPACE(1),8,L)          #交易日期
+=FILL(TRIM(FML(OutTranTime)),SPACE(1),6,L)          #交易时间

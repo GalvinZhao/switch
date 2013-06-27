@@ -1,0 +1,10 @@
+FMTDESC=移动接出_运营商充值交易查询_返回解包
+TRANTYPE=1
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+QueryTranFlow=TRIM(NSP(1,32))      #查询交易流水号32
+OutOriStdioJnl=TRIM(NSP(33,32))    #查询的源交易流水号32
+QueryRespCode=TRIM(NSP(65,8))      #查询交易返回码8
+RespCode=TRIM(NSP(73,8))           #查询源交易状态8
+RespInf=TRIM(NSP(81,64))           #查询源交易返回信息64

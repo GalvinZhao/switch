@@ -1,0 +1,15 @@
+FMTDESC=移动接出_手机充值_请求打包
+TRANTYPE=101
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+=FILL(100201,SPACE(1),6,R)                                                    #充值交易码
+=FILL(10083768527,SPACE(1),32,R)                                              #代理商账号(从配置文件中取)
+=FILL(SPACE(1),SPACE(1),32,R)                                                 #代理商密码(从加密文件中取,此处填空)
+=FILL(SAD(GETTIME(YYYYMMDD),FILL(MSGHEAD(lTranid),0,8,L)),SPACE(1),32,R)      #代理商流水号
+=FILL(FML(PhoneNum),SPACE(1),32,R)                                            #手机号
+=FILL(FML(mchncode),SPACE(1),32,R)                                            #二级商户编码
+=FILL(FML(DepositAmt),SPACE(1),32,R)                                          #金额
+=FILL(GETTIME(YYYYMMDDHHMMSS),SPACE(1),32,R)                                 #时间
+#=FILL(GETTIME(YYYYMMDDHHMMSS),SPACE(1),32,R)
+=FILL(FML(SenderTranDateTime),SPACE(1),32,R)

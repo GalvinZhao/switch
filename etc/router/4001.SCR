@@ -1,0 +1,32 @@
+ROUTEDESC=信用卡还款
+[ROUTE]
+
+10 SET busiCd=PT01
+11 SET txnDir=Q
+12 SET busiChnl=22
+#13 SET txnAmt=
+#14 SET srcInsCd=
+#15 SET srcStlDt=
+16 SET srcInsSsn=FILL(MSGHEAD(lTranid),0,6,L)
+#17 SET locDt=
+#18 SET locTm=
+19 SET regionCd=2900
+#20 SET srcTermId=
+#21 SET phoneNo=
+#22 SET trackData=
+23 SET txnCurrCd=156
+#24 SET cardPin=
+#25 SET cardPinFmt=
+#26 SET srcMchntCd=
+#27 SET debitAcntCd=              #借记帐号
+#28 SET creditAcntCd=             #贷记帐号
+#29 SET mac=
+
+#50 CALL 32
+
+60 EXEC (1) SELECT head_len INTO var1 FROM swt_msghead
+
+#70 EXEC (1) SELECT  errmsg,brcode INTO var1,var2 FROM err_msg WHERE errcod='{FML(szErrCode)}'
+
+
+90 SEND  MSGHEAD(iBegin_q_id) WITH END

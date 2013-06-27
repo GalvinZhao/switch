@@ -1,0 +1,32 @@
+ROUTEDESC=管理平台发起_手工扣帐
+[ROUTE]
+#################################################验证商户号是否存在###############################################
+10   EXEC (1) SELECT AcctNo INTO :AcctNo FROM acct_main_record WHERE AcctNo='{FML(InReqAcctNo)}'
+15   IF AND(SEQ(FML(_SQLCODE),0),SEQ(FML(_SQLNROWS),0)) THEN SET OutRespCode=S531
+20   IF AND(SEQ(FML(_SQLCODE),0),SEQ(FML(_SQLNROWS),0)) THEN SET OutRespInf=手工扣账失败-虚拟账户未找到
+25   IF AND(SEQ(FML(_SQLCODE),0),SEQ(FML(_SQLNROWS),0)) THEN GOTO 200
+##################################################################################################################
+
+#######################################################扣虚拟账户操作###############################################
+100  SET ACCTFLG=TRUE
+
+110  SET TranCode=8804                                                                                             #交易码
+120  SET TranChannel=FILL(MSGHEAD(iBegin_q_id),0,4,L)                                                              #交易渠道
+130  SET CustomAcctNo=FML(InReqAcctNo)                                                                               #客户账号
+140  SET JDFlag=00                                                                                                 #借贷标志
+150  SET Money=FML(InReqTranAmt)                                                                                       #交易金额
+
+200  CALL 33                                                                                                       #对虚拟账户进行扣款
+
+210  IF NOT(SEQ(FML(RespCode),S230)) THEN SET OutAcctJnl=                                  #账务流水号
+220  IF NOT(SEQ(FML(RespCode),S230)) THEN SET OutAcctYe=                                   #当前余额
+230  IF NOT(SEQ(FML(RespCode),S230)) THEN SET OutRespCode=FML(RespCode)                    #返回码
+240  IF NOT(SEQ(FML(RespCode),S230)) THEN SET OutRespInf=FML(RespInfo)                     #返回信息
+
+250  IF SEQ(FML(RespCode),S230) THEN SET OutAcctJnl=TRIM(FML(Rzh))                         #账务流水号
+255  IF SEQ(FML(RespCode),S230) THEN SET OutAcctYe=TRIM(FML(AcctYe))                       #当前余额
+260  IF SEQ(FML(RespCode),S230) THEN SET OutRespCode=S500                                  #返回码
+265  IF SEQ(FML(RespCode),S230) THEN SET OutRespInf=FML(RespInfo)                          #返回(虚拟账户操作失败)
+####################################################################################################################
+
+400  SEND MSGHEAD(iBegin_q_id) WITH END

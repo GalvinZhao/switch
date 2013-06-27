@@ -1,0 +1,38 @@
+FMTDESC=卡密下载:打包
+TRANTYPE=0
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+TranCode=FML(TranCode)
+TerminalID=FML(TerminalID)    #终端编号
+PosOp=FML(PosOp)              #操作员
+ReqTime=FML(ReqTime)          #请求时间
+Fc=FML(Fc)
+TradKey=FML(TradKey)          #交易密码
+
+CardType=FML(CardType)        #卡种代码
+ValueType=FML(ValueType)      #卡种面值
+CardNum=FML(CardNum)          #请求数量
+
+Card1=FML(Card1)
+Card2=FML(Card2)
+Card3=FML(Card3)
+Card4=FML(Card4)
+Card5=FML(Card5)
+Card6=FML(Card6)
+Card7=FML(Card7)
+Card8=FML(Card8)
+Card9=FML(Card9)
+Card10=FML(Card10)
+Phd=FML(Phd)
+Dsp=FML(Dsp)
+Rsv=FML(Rsv)
+
+ReturnCode=
+
+CardNo=FML(CardNo)
+CardID=FML(CardID)
+CardKey=FML(CardKey)
+CardValid=FML(CardValid)
+DeadLine=FML(DeadLine)
+

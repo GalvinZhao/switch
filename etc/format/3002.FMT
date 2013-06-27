@@ -1,0 +1,30 @@
+FMTDESC=电信接出_手机充值_请求打包
+TRANTYPE=101
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+=FILL(249,0,4,L)                              #消息长度head1
+=FILL(001,SPACE(1),3,R)                       #加密算法编号head2
+=FILL(0401,SPACE(1),4,R)                      #消息代码head3
+=FILL(8013,SPACE(1),4,R)                      #发端代码head4
+=FILL(3100,SPACE(1),4,R)                      #收端代码head5
+=FILL(SAD(GETTIME(YYYYMMDD),000,FILL(MSGHEAD(lTranid),0,8,L)),SPACE(1),19,R)   #消息流水号head6
+=FILL(GETTIME(YYYYMMDDHHMMSS),SPACE(1),14,R)  #消息产生时间head7
+=FILL(7,SPACE(1),1,R)                         #接入类型head8
+=FILL(02160001,SPACE(1),14,R)                 #保留字段head9
+=FILL(SPACE(1),SPACE(1),8,R)                  #保留字段head10
+=FILL(FML(PhoneNum),SPACE(1),28,R)            #被充值账号body1
+=FILL(SPACE(1),SPACE(1),32,R))                #被充值账号密码
+=FILL(02,SPACE(1),2,R)                        #被充值产品类型
+=FILL(RIG(FML(DepositAmt),10),0,10,L)         #充值金额
+=FILL(GETTIME(YYYYMMDDHHMMSS),SPACE(1),14,R)  #充值日期时间
+=FILL(FML(CardNumber),SPACE(1),22,R)          #充值卡卡号
+=FILL(FML(CardPIN),SPACE(1),48,R)             #充值卡密码
+=FILL(05,SPACE(1),2,R)                        #充值卡类别
+=FILL(06,SPACE(1),2,R)                        #接入类型
+=FILL(RIG(GETTIME(YYYYMMDD),6),SPACE(1),6,R)
+=W
+=FILL(RIG(MSGHEAD(lTranid),7),0,7,L)    #交易流水号
+
+
+

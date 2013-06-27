@@ -1,0 +1,26 @@
+FMTDESC=农商行ATM接入_手机充值_返回打包
+TRANTYPE=101
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+=FILL(148,0,4,L)                              #消息包大小
+=FILL(FML(InHeadLen),0,4,L)                   #包头大小
+=FILL(1011,SPACE(1),4,R)                      #交易类型
+=FILL(FML(InVersion),SPACE(1),2,R)            #版本号
+=FILL(FML(InEptFlg),SPACE(1),1,R)             #加密标志
+=FILL(FML(InEptType),SPACE(1),1,R)            #加密方式
+                                              
+=FILL(1011,SPACE(1),4,R)                      #交易类别
+=FILL(FML(InLogAcct),SPACE(1),15,R)           #渠道商户号
+=FILL(FML(InCityNum),SPACE(1),4,R)            #城市代码
+=FILL(FML(InReqDateTime),SPACE(1),14,R)       #接入端交易时间
+=FILL(FML(InReqTermJnl),SPACE(1),6,R)         #接入端流水号
+=FILL(FML(InPhoneNum),SPACE(1),11,R)          #手机号码
+=FILL(FML(InDepositAmt),SPACE(1),12,R)        #充值金额
+=FILL(SPACE(1),SPACE(1),30,R)                 #保留
+#=FILL(FML(OutTranTime),SPACE(1),14,R)        #充值平台时间
+=FILL(GETTIME(YYYYMMDDHHMMSS),SPACE(1),14,R)  #充值平台时间
+=FILL(RIG(FML(OutStdJnl),6),SPACE(1),6,R)     #充值平台流水号
+=FILL(FML(OutRespCode),SPACE(1),4,R)          #状态
+
+

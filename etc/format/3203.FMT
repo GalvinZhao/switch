@@ -1,0 +1,16 @@
+FMTDESC=Web接入_虚拟账户转账(建行)_请求解包
+TRANTYPE=1
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+#InReqDateTime=TRIM(NSP(7,14))        #发起方交易日期时间
+#InJnl=TRIM(NSP(21,18))               #流水号 网站产生
+#InLogAcct=TRIM(NSP(39,16))           #用户登陆账号 商户号
+#InMchPwd=TRIM(NSP(55,6))             #用户登陆密码
+#InTranAmt=TRIM(NSP(61, 12))          #转账金额 单位分
+InNodeCode=TRIM(NSP(1,4))
+InReqDateTime=TRIM(NSP(11,14))        #发起方交易日期时间
+InJnl=TRIM(NSP(25,18))               #流水号 网站产生
+InLogAcct=TRIM(NSP(43,16))           #用户登陆账号 商户号
+InMchPwd=TRIM(NSP(59,16))             #用户登陆密码
+InTranAmt=TRIM(NSP(75, 12))          #转账金额 单位分

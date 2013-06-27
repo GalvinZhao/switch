@@ -1,0 +1,12 @@
+FMTDESC=ÐéÄâ×ªÕË²âÊÔ
+TRANTYPE=0
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+RespCode=FML(RespCode)
+RespInfo=FML(RespInfo)
+Rzh=FML(Rzh)
+Cph=FML(Cph)
+CustomAcctno=FML(CustomAcctno)
+AcctYe=FML(AcctYe)
+AvailYe=FML(AvailYe)

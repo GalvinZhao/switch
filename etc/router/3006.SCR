@@ -1,0 +1,4 @@
+ROUTEDESC=付临门短信通知
+[ROUTE]
+10  CALL 50                             #发短信
+20  SEND MSGHEAD(iBegin_q_id) WITH END  #返回发起端

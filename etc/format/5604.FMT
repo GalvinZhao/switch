@@ -1,0 +1,7 @@
+FMTDESC=联通卡密查询_返回解包
+TRANTYPE=1
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+MsgType=305110
+MsgReBodyDX=NSP(1,140)

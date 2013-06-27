@@ -1,0 +1,8 @@
+FMTDESC=电信卡密查询返回打包
+TRANTYPE=101
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+=FILL(FML(MsgReBodyDX),SPACE(1),220,R)        #返回信息
+
+

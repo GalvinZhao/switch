@@ -1,0 +1,17 @@
+FMTDESC=南京POS接入_网络测试_返回打包
+TRANTYPE=101
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+=FILL(<EP>,SPACE(1),4,L)                    #开始4
+=FILL(000,SPACE(1),8,L)                     #包长度8
+=FILL(FML(InVersion),SPACE(1),4,L)          #请求版本4
+=FILL(FML(InLogAcct),SPACE(1),20,L)         #代理代码20
+=FILL(FML(InBegTerm),SPACE(1),20,L)         #发起终端20
+=FILL(FML(InOpeTerm),SPACE(1),20,L)         #执行终端20
+=FILL(FML(InReqDate),SPACE(1),8,L)          #请求日期8
+=FILL(FML(InReqTime),SPACE(1),6,L)          #请求时间6
+=FILL(FML(InReqJnl),SPACE(1),20,L)          #请求流水20
+=FILL(00000000,SPACE(1),8,L)        #请求结果8
+=FILL(330003,SPACE(1),8,L)                  #交易码8
+

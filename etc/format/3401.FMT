@@ -1,0 +1,22 @@
+FMTDESC=电信信付通接入_手机充值_请求解包
+TRANTYPE=1
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+InMlen=TRIM(NSP(1,4))                        #报文长度4
+InConnecttype=TRIM(NSP(5,2))                 #接入方式2
+InMsgCode=TRIM(NSP(7,4))                     #消息类型4
+InTradeType=TRIM(NSP(11,4))                  #交易类型4
+InSndCode=TRIM(NSP(15,4))                    #发端代码4
+InRcvCode=TRIM(NSP(19,4))                    #收端代码4
+InReqDateTime=TRIM(NSP(23,14))               #发起方日期时间14
+InMsgSeq=TRIM(NSP(23,19))                    #消息流水号19
+InResversed1=TRIM(NSP(42,14))                #保留字段14
+InResversed2=TRIM(NSP(56,8))                 #保留字段8
+InPhoneNum=TRIM(NSP(64,40))                  #账单号(手机号)40
+InPhoneFlg=LFT(TRIM(NSP(64,40)),3)           #充值标识(业务处理用
+InReqJnl=TRIM(NSP(104,19))                   #交易流水号19
+InDepositAmt=TRIM(NSP(123,20))               #支付金额20
+InLogAcct=DXXFT0000000001
+
+

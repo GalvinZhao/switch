@@ -1,0 +1,10 @@
+ROUTEDESC=ø®√‹œ¬‘ÿ≤‚ ‘
+[ROUTE]
+0 WITH REVMODE 4
+
+10 SET ReturnCode=0000
+12 SET Buff=111111111111111111           222222222222222222                                                    9
+
+60 SEND  MSGHEAD(iBegin_q_id) WITH END
+
+

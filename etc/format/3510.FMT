@@ -1,0 +1,7 @@
+FMTDESC=管理平台接入_手工抹账_返回打包
+TRANTYPE=101
+[TDF]
+=FILL(FML(OutAcctYe),SPACE(1),18,R)                        #抹账后余额
+=FILL(FML(OutRespCode),SPACE(1),8,R)                       #返回码
+=FILL(FML(OutRespInf),SPACE(1),64,R)                       #返回信息
+

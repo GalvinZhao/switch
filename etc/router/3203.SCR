@@ -1,0 +1,13 @@
+ROUTEDESC=(测试)直冲和转帐
+[ROUTE]
+0 WITH REVMODE 4
+
+# 设定返回码
+100 SET testcode=0000
+110 SET WebTest01=SWITCH123456        #应答流水号
+120 SET WebTest02=0000         #返回码
+130 SET WebTest03=20110111        #交易日期
+140 SET WebTest04=131313         #交易时间
+
+
+600 SEND  MSGHEAD(iBegin_q_id) WITH END

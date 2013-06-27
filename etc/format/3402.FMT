@@ -1,0 +1,19 @@
+FMTDESC=电信信付通接入_手机充值_返回打包
+TRANTYPE=101
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+=FILL(77,0,4,L)                            #报文长度4
+=FILL(FML(InConnecttype),SPACE(1),2,L)      #接入方式2
+=FILL(0351,SPACE(1),4,L)                    #消息类型4
+=FILL(FML(InTradeType),SPACE(1),4,L)        #交易类型4
+=FILL(FML(InRcvCode),SPACE(1),4,L)          #发端代码4
+=FILL(FML(InSndCode),SPACE(1),4,L)          #收端代码4
+=FILL(FML(InMsgSeq),SPACE(1),19,L)          #消息流水号19
+=FILL(SPACE(1),SPACE(1),14,L)               #保留字段14
+=FILL(SPACE(1),SPACE(1),8,L)                #保留字段8
+=FILL(FML(OutRespCode),SPACE(1),2,L)        #响应码2
+=FILL(0000,SPACE(1),4,L)                    #响应字符串长度4
+
+
+

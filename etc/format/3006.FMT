@@ -1,0 +1,10 @@
+FMTDESC=移动接出_手机充值_返回解包
+TRANTYPE=1
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+OriFlow=TRIM(NSP(1,32))      #源交易流水号
+RespCode=TRIM(NSP(33,8))     #返回码0为成功其它为失败
+RespInfo=NSP(41,64)          #返回码不为0时存在,为0时为空
+
+

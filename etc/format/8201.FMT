@@ -1,0 +1,6 @@
+FMTDESC=账务处理:转账解包
+TRANTYPE=0
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+respcode = NSP(1,4)

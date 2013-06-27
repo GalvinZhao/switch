@@ -1,0 +1,12 @@
+FMTDESC=HTTP接入
+TRANTYPE=2
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+InNodeCode=SEP(0,0,1)
+InReqDateTime=SEP(0,1,1)               #交易发起日期时间
+InReqJnl=SEP(0,2,1)                    #请求方流水号
+InLogAcct=SEP(0,3,1)                   #用户登陆账号(商户号)
+InPhoneNum=SEP(0,4,1)                  #充值手机号
+InPhoneFlg=LFT(SEP(0,4,1),3)           #手机充方(业务处理用)
+InDepositAmt=SEP(0,5,1)                #充值金额 单位分

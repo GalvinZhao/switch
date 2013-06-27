@@ -1,0 +1,16 @@
+FMTDESC=去山东接出
+TRANTYPE=102
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+=SAD(FML(InTranCode),|)
+=SAD(agentid,=)
+=SAD(111111,&)
+=SAD(orderid,=)
+=SAD(FML(StdioJnl),&)
+=SAD(money,=)
+=SAD(DIV(FML(DepositAmt),100),&)
+=SAD(telephonetype,=)
+=SAD(FML(ChnlNo),&)
+=SAD(mobilenum,=)
+=SAD(FML(PhoneNum),&)

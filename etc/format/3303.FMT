@@ -1,0 +1,21 @@
+FMTDESC=南京POS接入_充值交易查询_请求解包
+TRANTYPE=1
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+InStartFlg=TRIM(NSP(1,4))                    #开始标识符4
+#InPackLen=TRIM(NSP(5,8))                    #包长度8
+InVersion=TRIM(NSP(13,4))                    #请求版本4
+#InLogAcct=TRIM(NSP(17,20))                   #代理代码(商户号)20
+InLogAcct=NJPOS0000000001
+InBegTerm=TRIM(NSP(37,20))                   #发起终端代码20
+#InBegTermPwd=TRIM(NSP(57,20))               #发起终端密码20
+InOpeTerm=TRIM(NSP(77,20))                   #执行终端代码20
+#InOpeTermPwd=TRIM(NSP(97,20))               #执行终端密码20
+#InTimeOut=TRIM(NSP(117,8))                  #超时时间8
+InReqDate=TRIM(NSP(125,8))                   #请求日期8
+InReqTime=TRIM(NSP(133,6))                   #请求时间6
+InReqJnl=TRIM(NSP(139,20))                   #请求流水号20
+InTranCode=TRIM(NSP(159,8))                  #请求交易码8
+InOriReqJnl=TRIM(NSP(167,30))                #原充值流水号30
+

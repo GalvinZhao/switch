@@ -1,0 +1,18 @@
+FMTDESC=信用卡还款终端响应
+TRANTYPE=101
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+=FILL(FML(busiCd),SPACE(1),4,R)       #业务代码
+=FILL(FML(txnDir),SPACE(1),1,R)       #交易方向
+=FILL(FML(txnDir),SPACE(1),2,R)       #业务渠道
+=FILL(FML(txnAmt),SPACE(1),12,R)      #交易金额
+=FILL(FML(kbpsTraceNo),SPACE(1),12,R) #富友系统跟踪号
+=FILL(FML(kbpsSettleDt),SPACE(1),8,R) #富友系统清算日期
+=FILL(FML(txnFinTm),SPACE(1),10,R)    #交易完成时间
+=FILL(FML(rspCd),SPACE(1),4,R)        #答应码
+=FILL(FML(authRspCd),SPACE(1),6,R)    #授权码
+=FILL(FML(rsnCd),SPACE(1),4,R)        #原因码
+=FILL(FML(rcvInsCd),SPACE(1),13,R)    #接受机构标识码
+=FILL(FML(rspData),SPACE(1),203,R)    #答应结果数据
+=FILL(FML(mac),SPACE(1),8,R)          #报文鉴别码

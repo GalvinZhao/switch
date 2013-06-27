@@ -1,0 +1,8 @@
+FMTDESC=南京POS接入_短信通知_返回打包
+TRANTYPE=101
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+=FILL(SPACE(1),SPACE(1),118,R)   ##报文头
+=FILL(330004,SPACE(1),8,L)       #交易码
+=FML(SmsPackBody)                #消息返回整个报文

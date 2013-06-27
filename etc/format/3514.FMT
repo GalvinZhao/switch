@@ -1,0 +1,6 @@
+FMTDESC=管理平台接入_充值失败退款_返回打包
+TRANTYPE=101
+[TDF]
+=FILL(FML(OutOriStdioJnl),SPACE(1),30,R)    #源充值平台流水号
+=FILL(FML(OutRespCode),SPACE(1),8,R)        #返回码
+=FILL(FML(OutRespInf),SPACE(1),64,R)        #返回信息

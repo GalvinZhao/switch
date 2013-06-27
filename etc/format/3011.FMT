@@ -1,0 +1,14 @@
+FMTDESC=建行接出_虚拟账户转账_返回解包
+TRANTYPE=1
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+REQUEST_SN=TRIM(NSP(1,16))          #请求序列号
+CUST_ID=TRIM(NSP(17,21))            #客户号
+TX_CODE=TRIM(NSP(38,6))             #交易码
+RETURN_CODE=NSP(44,6)               #响应码
+RETURN_MSG=NSP(50,99)               #响应信息
+LANGUAGE=TRIM(NSP(149,2))           #语言
+CREDIT_NO=NSP(151,12)               #凭证号
+
+

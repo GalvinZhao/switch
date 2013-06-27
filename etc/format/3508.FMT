@@ -1,0 +1,8 @@
+FMTDESC=管理平台接入_手工转账_返回打包
+TRANTYPE=101
+[TDF]
+=FILL(FML(OutAcctJnl),SPACE(1),30,R)                       #转账账务流水号
+=FILL(FML(OutAcctYe),SPACE(1),18,R)                        #转账后余额
+=FILL(FML(OutRespCode),SPACE(1),8,R)                       #返回码
+=FILL(FML(OutRespInf),SPACE(1),64,R)                       #返回信息
+

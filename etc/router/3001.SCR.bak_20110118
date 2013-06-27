@@ -1,0 +1,199 @@
+ROUTEDESC=手机直充
+[ROUTE]
+1    SET iBegQid1=24                              #ATM                             
+2    SET iBegQid2=26                              #电话                             
+3    SET iBegQid3=28                              #网站                             
+4    SET iBegQid4=30                              #短信                             
+5    SET iBegQid5=32                              #POS                             
+                                                       
+11   SET iDesQid1=35                              #联通                             
+12   SET iDesQid2=37                              #移动                             
+13   SET iDesQid3=39                              #电信                             
+                                                  
+21   SET iBegQid=MSGHEAD(iBegin_q_id)             #发起邮箱
+22   SET iSqlQid=22                               #内部处理邮箱(记流水)                             
+23   SET iAcctQid=33                              #内部处理邮箱(虚拟账户操作)                             
+24   SET iCardQid=19                              #内部处理邮箱(通过加密机取卡密)  
+
+31   IF SEQ(FML(InPhoneFlg),130) THEN GOTO 150    #上海联通手机号段
+32   IF SEQ(FML(InPhoneFlg),131) THEN GOTO 150
+33   IF SEQ(FML(InPhoneFlg),132) THEN GOTO 150
+34   IF SEQ(FML(InPhoneFlg),155) THEN GOTO 150
+35   IF SEQ(FML(InPhoneFlg),156) THEN GOTO 150
+36   IF SEQ(FML(InPhoneFlg),186) THEN GOTO 150
+
+51   IF SEQ(FML(InPhoneFlg),134) THEN GOTO 160    #上海移动手机号段
+52   IF SEQ(FML(InPhoneFlg),135) THEN GOTO 160
+53   IF SEQ(FML(InPhoneFlg),136) THEN GOTO 160
+54   IF SEQ(FML(InPhoneFlg),137) THEN GOTO 160
+55   IF SEQ(FML(InPhoneFlg),138) THEN GOTO 160
+56   IF SEQ(FML(InPhoneFlg),139) THEN GOTO 160
+57   IF SEQ(FML(InPhoneFlg),150) THEN GOTO 160
+58   IF SEQ(FML(InPhoneFlg),151) THEN GOTO 160
+59   IF SEQ(FML(InPhoneFlg),152) THEN GOTO 160
+60   IF SEQ(FML(InPhoneFlg),157) THEN GOTO 160
+61   IF SEQ(FML(InPhoneFlg),158) THEN GOTO 160
+62   IF SEQ(FML(InPhoneFlg),159) THEN GOTO 160
+63   IF SEQ(FML(InPhoneFlg),182) THEN GOTO 160
+64   IF SEQ(FML(InPhoneFlg),187) THEN GOTO 160
+65   IF SEQ(FML(InPhoneFlg),188) THEN GOTO 160
+
+81   IF SEQ(FML(InPhoneFlg),133) THEN GOTO 170    #上海电信手机号段
+82   IF SEQ(FML(InPhoneFlg),153) THEN GOTO 170
+83   IF SEQ(FML(InPhoneFlg),189) THEN GOTO 170
+
+115  SET stdRespCode=0006                                                                          #返回码
+120  SET stdRespInfo=充值手机号段系统不支持                                                        #返回信息
+130  GOTO 900                                                                                      #号段不支持
+
+150  SET iDesQid=FML(iDesQid1)     #联通邮箱
+155  GOTO 190
+160  SET iDesQid=FML(iDesQid2)     #移动邮箱
+165  GOTO 190
+170  SET iDesQid=FML(iDesQid3)     #电信邮箱
+
+########################################################记充值流水###############################################################
+190  SET TranCode=8901                                                                             #内部交易码
+195  SET SenderJnl=FML(InReqJnl)                                                                   #交易发起方流水号
+196  SET StdioJnl=FILL(SAD(GETTIME(YYYYMMDD),FILL(MSGHEAD(lTranid),0,8,L)),SPACE(1),16,R)          #平台流水号
+############第三方流水号处理#############
+#联通
+200  IF  SEQ(FML(iDesQid),FML(iDesQid1)) THEN SET SET RecvMsgJnl=FML(StdioJnl)                     #第三方消息流水号(原系统流水号) 
+201  IF  SEQ(FML(iDesQid),FML(iDesQid1)) THEN SET SET RecvJnl=                                     #第三方交易流水号(缴费平台流水号)(待更新)
+#移动                                                                                              
+202  IF  SEQ(FML(iDesQid),FML(iDesQid2)) THEN SET SET RecvMsgJnl=FML(StdioJnl)                     #第三方消息流水号 
+203  IF  SEQ(FML(iDesQid),FML(iDesQid2)) THEN SET SET RecvJnl=FML(StdioJnl)                        #第三方交易流水号 
+#电信
+204  IF  SEQ(FML(iDesQid),FML(iDesQid3)) THEN SET SET RecvMsgJnl=FILL(SAD(GETTIME(YYYYMMDD),000,FILL(MSGHEAD(lTranid),0,8,L)),SPACE(1),19,R) #第三方消息流水号 
+205  IF  SEQ(FML(iDesQid),FML(iDesQid3)) THEN SET SET RecvJnl=FILL(SAD(RIG(GETTIME(YYYYMMDD),6),FILL(MSGHEAD(lTranid),0,8,L)),SPACE(1),14,R) #第三方交易流水号 
+#########################################              
+210  SET AcctJnl=                                                                                  #账务流水号  
+211  SET TranDate=GETTIME(YYYYMMDD)                                                                #交易日期
+212  SET TranTime=GETTIME(HHMMSS)                                                                  #交易时间                     
+215  SET TranStat=0                                                                                #交易状态(初始状态)                       
+220  SET StdioTranCode=MSGHEAD(aTrancode)                                                          #平台交易码                      
+225  SET SenderFlg=FILL(MSGHEAD(iBegin_q_id),0,4,L)                                                #交易发起渠道                    
+230  SET CusLoginAcct=FML(InLogAcct)                                                               #用户登陆账号(商户号)            
+235  SET TranAmt=FML(InTranAmt)                                                                    #交易金额                                               
+240  SET TranYe=                                                                                   #当前余额                        
+245  SET RecvRespCode=                                                                             #第三方返回码                    
+250  SET RecvRespInf=                                                                              #第三方返回信息                  
+255  SET CardRespCode=                                                                             #卡密库返回码                    
+260  SET CardRespInf=                                                                              #卡密库返回信息                  
+265  SET AcctRespCode=                                                                             #账务返回码                      
+270  SET AcctRespInf=                                                                              #账务返回信息                    
+280  SET MobilPhone=FML(InPhoneNum)                                                                #手机号码                        
+290  SET CardNo=                                                                                   #充值卡号                        
+295  SET CardJnl=                                                                                  #卡密入库流水号(唯一确定一张卡密)
+300  SET RecvFlg=FILL(FML(iDesQid),0,4,L)                                                          #运营商渠道                      
+
+310  CALL FML(iSqlQid)   #记充值流水
+315  IF NOT(SEQ(FML(RespCode),0000)) THEN SET stdRespCode=0002                                     #返回码
+320  IF NOT(SEQ(FML(RespCode),0000)) THEN SET stdRespInfo=系统数据库记流水失败                     #返回信息
+325  IF NOT(SEQ(FML(RespCode),0000)) THEN GOTO  900                                                #返回
+###########################################################################################################################
+
+#######################################################扣虚拟账户操作######################################################
+#ATM发起不扣虚拟账户
+330  IF SEQ(FML(iBegQid),FML(iBegQid1)) THEN GOTO 450 
+
+340  SET TranCode=8804                                                                             #交易码
+345  SET TranChannel=FILL(MSGHEAD(iBegin_q_id),0,4,L)                                              #交易渠道
+350  SET CustomAcctNo=FML(InLogAcct)                                                               #客户账号
+355  SET AcctType=0                                                                                #账号类型
+360  SET JDFlag=00                                                                                 #借贷标志
+365  SET XZFlag=0                                                                                  #现转标记
+370  SET TolAcctNo=                                                                                #汇总账户
+375  SET Money=FML(InTranAmt)                                                                      #交易金额
+280  SET JYFlag=0                                                                                  #校验标志
+385  SET PassWord=                                                                                 #客户密码
+390  SET CustomName=                                                                               #客户名称
+395  SET CredType=                                                                                 #证件类型
+400  SET CredNo=                                                                                   #证件号码
+405  SET Abstract=                                                                                 #业务摘要
+410  SET Note=                                                                                     #备注
+
+420  CALL FML(iAcctQid)   #对虚拟账户进行扣款
+
+430  IF NOT(SEQ(FML(RespCode),0000)) THEN SET AcctJnl=                                             #账务流水号
+431  IF NOT(SEQ(FML(RespCode),0000)) THEN SET TranYe=                                              #当前余额
+432  IF NOT(SEQ(FML(RespCode),0000)) THEN SET TranStat=1                                           #账务失败
+                                                                                                   
+435  IF SEQ(FML(RespCode),0000) THEN SET AcctJnl=TRIM(FML(Rzh))                                    #账务流水号
+436  IF SEQ(FML(RespCode),0000) THEN SET TranYe=TRIM(FML(AcctYe))                                  #当前余额
+437  IF SEQ(FML(RespCode),0000) THEN SET TranStat=2                                                #账务成功
+
+440  EXEC (1) UPDATE d_directadd SET AcctJnl='{FML(AcctJnl)}',TranYe='{FML(TranYe)}' WHERE StdioJnl='{FML(StdioJnl)}'
+441  EXEC (1) UPDATE d_directadd SET AcctRespCode='{FML(RespCode)}',AcctRespInf='{FML(RespInfo)}',TranStat='{FML(TranStat)}' WHERE StdioJnl='{FML(StdioJnl)}'
+442  IF NOT(SEQ(FML(RespCode),0000)) THEN SET stdRespCode=0005                                     #返回码
+443  IF NOT(SEQ(FML(RespCode),0000)) THEN SET stdRespInfo=内部虚拟账户操作失败                     #返回信息
+443  IF NOT(SEQ(FML(RespCode),0000)) THEN GOTO 900                                                 #返回
+
+######################################################################################################################
+
+
+######################################################取卡密操作######################################################
+#移动不取卡密
+450  IF SEQ(FML(iDesQid),FML(iDesQid2)) THEN GOTO 600 
+
+460  SET TranCode=8911                                                                             #交易码
+470  SET RecvFlg=FILL(FML(iDesQid),0,4,L)                                                          #运营标志
+480  SET TranAmt=FML(InDepositAmt)                                                                 #交易金额
+
+500  CALL FML(iAcctQid)   #取卡密
+
+510  IF NOT(SEQ(FML(RespCode),0000)) THEN SET TranStat=3                                           #取卡密失败
+511  IF NOT(SEQ(FML(RespCode),0000)) THEN SET CardNo=                                              #卡号
+512  IF NOT(SEQ(FML(RespCode),0000)) THEN SET CardJnl=                                             #卡密流水号
+
+520  IF SEQ(FML(RespCode),0000) THEN SET TranStat=4                                                #取卡密成功
+521  IF SEQ(FML(RespCode),0000) THEN SET CardNo=FML(CardNo)                                        #卡号
+522  IF SEQ(FML(RespCode),0000) THEN SET CardJnl=FML(CardJnl)                                      #卡密流水号
+
+529  EXEC (1) UPDATE d_directadd SET CardNo='{FML(CardNo)}',CardJnl='{FML(CardJnl)}' WHERE StdioJnl='{FML(StdioJnl)}'  #更新卡号和卡密流水号
+530  EXEC (1) UPDATE d_directadd SET CardRespCode='{FML(RespCode)}',CardRespInf='{FML(RespInfo)}',TranStat='{FML(TranStat)}' WHERE StdioJnl='{FML(StdioJnl)}'
+540  IF NOT(SEQ(FML(RespCode),0000)) THEN SET stdRespCode=0007                                     #返回码
+545  IF NOT(SEQ(FML(RespCode),0000)) THEN SET stdRespInfo=取卡密失败                               #返回信息
+550  IF NOT(SEQ(FML(RespCode),0000)) THEN GOTO 900                                                 #返回
+####################################################################################################################
+
+
+####################################################运营商充值处理#################################################
+600  SET TranStat=5                                                                                #运营商初始状态
+610  EXEC (1) UPDATE d_directadd SET TranStat='{FML(TranStat)}' WHERE StdioJnl='{FML(StdioJnl)}'
+
+620  SET PhoneNum=FML(InPhoneNum)                                                                  #充值手机号
+630  SET DepositAmt=FML(InDepositAmt)                                                              #充值金额
+640  SET CardNumber=FML(CardNo)                                                                    #充值卡号
+650  SET CardPIN=FML(CardPin)                                                                      #充值卡密
+
+700  CALL FML(iDesQid)     #去运营商
+
+710  EXEC (1) UPDATE d_directadd SET RecvRespCode='{FML(RespCode)}',RecvRespInf='{FML(RespInfo)}' WHERE StdioJnl='{FML(StdioJnl)}' #第三方返回码返回信息
+
+#更新联通第三方交易流水号
+711  IF  SEQ(FML(iDesQid),FML(iDesQid1)) THEN SET SET RecvJnl=FML(UbionNum)                        #第三方交易流水号
+
+#更新交易状态
+#联通和电信成功为0000,移动为0
+715  SET TranStat=6                                                                                #默认为交易失败
+720  IF AND(OR(SEQ(FML(iDesQid),FML(iDesQid1)),SEQ(FML(iDesQid),FML(iDesQid3))),SEQ(FML(RespCode),0000)) THEN SET TranStat=8    #交易成功
+730  IF AND(SEQ(FML(iDesQid),FML(iDesQid2)),SEQ(FML(RespCode),0)) THEN SET TranStat=8              #交易成功
+740  EXEC (1) UPDATE d_directadd SET TranStat='{FML(TranStat)}',RecvJnl='{FML(RecvJnl)}' WHERE StdioJnl='{FML(StdioJnl)}'
+
+#返回码处理
+750  IF NOT(SEQ(FML(TranStat),8)) THEN SET stdRespCode=0008                                        #返回码
+760  IF NOT(SEQ(FML(TranStat),8)) THEN SET stdRespInfo=交易失败                                    #返回信息
+770  IF SEQ(FML(TranStat),8) THEN SET stdRespCode=0000                                             #返回码
+780  IF SEQ(FML(TranStat),8) THEN SET stdRespInfo=交易成功                                         #返回信息
+##################################################################################################################
+
+900  OutReqJnl=FML(InReqJnl)                                                                       #请求方流水号 
+910  OutStdJnl=FILL(SAD(GETTIME(YYYYMMDD),FILL(MSGHEAD(lTranid),0,8,L)),SPACE(1),16,R)             #应答流水号   
+920  OutRespCode=FML(stdRespCode)                                                                  #返回码       
+930  OutTranDate=GETTIME(YYYYMMDD)                                                                 #交易日期     
+940  OutTranTime=GETTIME(HHMMSS)                                                                   #交易时间     
+
+1000 SEND FML(iBegQid) WITH END  #返回发起端
+
+

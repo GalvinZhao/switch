@@ -1,0 +1,26 @@
+FMTDESC=双机POS卡密下载响应
+TRANTYPE=103
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+FMTDESC=双机POS卡密下载-响应
+TRANTYPE=103
+MAC_CREATE=
+MAC_CHECK=
+TDF=
+& TMP_SYSCODE=FML(syscode)
+1=0200                                 # 4位消息类型
+3=100101                               # 后台交易类型码
+11=FML(SEQNO)                          # 流水号
+12=FML(LOCALTIME                       # 本地时间
+13=FML(LOCALDATE                       # 本地日期
+25=FML(CARDCODE)                       # 服务点条件代码(正常进入)
+26=FML(AMOUNTCODE)
+39=FML(ReturnCode)
+41=FML(TERMID)                         # 终端标识号
+48=FML(Buf1)
+49=FML(CARDNUM)
+59=FML(Buf2)
+61=FML(Buf3)
+128=PTMACGEN (VAR(TMP_SYSCODE),VAR(TMP_MACBUF))
+

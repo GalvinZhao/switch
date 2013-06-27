@@ -1,0 +1,20 @@
+FMTDESC=建行接出_虚拟账户转账_请求打包
+TRANTYPE=101
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+=FILL(TRIM(FML(REQUEST_SN)),SPACE(1),16,R)    #请求序列号
+=FILL(TRIM(FML(CUST_ID)),SPACE(1),21,R)       #客户号
+=FILL(TRIM(FML(USER_ID)),SPACE(1),6,R)        #操作员号
+=FILL(TRIM(FML(PASSWORD)),SPACE(1),32,R)      #密码
+=FILL(TRIM(FML(TX_CODE)),SPACE(1),6,R)        #交易码
+=FILL(TRIM(FML(LANGUAGE)),SPACE(1),2,R)       #语言
+=FILL(TRIM(FML(ACC_NO1)),SPACE(1),32,R)       #转出帐户
+=FILL(TRIM(FML(BILL_CODE)),SPACE(1),20,R)     #代发代扣编号
+=FILL(TRIM(FML(ACC_NO2)),SPACE(1),32,R)       #转入帐户
+=FILL(TRIM(FML(OTHER_NAME)),SPACE(1),40,R)    #对方姓名
+=FILL(TRIM(FML(AMOUNT)),SPACE(1),16,R)        #金额
+=FILL(TRIM(FML(USEOF_CODE)),SPACE(1),12,R)    #用途
+#=FILL(SPACE(1),SPACE(1),32,R)          #备注1
+#=FILL(SPACE(1),SPACE(1),32,R)          #备注2
+#=FILL(SPACE(1),SPACE(1),254,R)         #签名信息

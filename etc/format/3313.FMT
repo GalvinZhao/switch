@@ -1,0 +1,7 @@
+FMTDESC=南京POS接入_短信通知_请求解包
+TRANTYPE=1
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+InPackHead=NSP(1,166)                        #报文头
+InPackBody=TRIM(NSP(167,512))                #短消息整个报文

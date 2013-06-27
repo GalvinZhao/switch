@@ -1,0 +1,17 @@
+FMTDESC=–Èƒ‚’Àªß◊™’À«Î«Û
+TRANTYPE=0
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+TranCode=FML(TranCode)
+TranChannel=FML(TranChannel)
+CustomAcctNo=FML(CustomAcctNo)
+AcctType=FML(AcctType)
+JDFlag=FML(JDFlag)
+XZFlag=FML(XZFlag)
+AcctNo=FML(AcctNo)
+Money=FML(Money)
+JYFlag=FML(JYFlag)
+PassWord=FML(PassWord)
+CustomName=FML(CustomName)
+CredType=FML(CredType)

@@ -1,0 +1,20 @@
+FMTDESC=南京快客POS接入_手机充值_返回打包
+TRANTYPE=101
+MAC_CREATE=
+MAC_CHECK=
+[TDF]
+=FILL(<EP>,SPACE(1),4,L)                    #开始4
+=FILL(000,SPACE(1),8,L)                     #包长度8
+=FILL(FML(InVersion),SPACE(1),4,L)          #请求版本4
+=FILL(FML(InLogAcct),SPACE(1),20,L)         #代理代码20
+=FILL(FML(InBegTerm),SPACE(1),20,L)         #发起终端20
+=FILL(FML(InOpeTerm),SPACE(1),20,L)         #执行终端20
+=FILL(FML(InReqDate),SPACE(1),8,L)          #请求日期8
+=FILL(FML(InReqTime),SPACE(1),6,L)          #请求时间6
+=FILL(FML(InReqJnl),SPACE(1),20,L)          #请求流水20
+=FILL(FML(OutRespCode),SPACE(1),8,L)        #请求结果8
+=FILL(330001,SPACE(1),8,L)                  #交易码8
+=FILL(FML(OutStdJnl),SPACE(1),30,L)         #平台流水号30
+=FILL(FML(InDepositAmt),SPACE(1),10,L)      #充值金额10
+=FILL(SPACE(1),SPACE(1),10,L)               #充值后余额10
+=FILL(SPACE(1),SPACE(1),14,L)               #有效期14
